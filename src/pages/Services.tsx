@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -122,7 +121,7 @@ const services = [
     id: 'training',
     icon: <Award size={32} />,
     title: 'Training & Workshops',
-    description: 'Knowledge transfer and skill-building for your team's digital capabilities.',
+    description: "Knowledge transfer and skill-building for your team's digital capabilities.",
     features: [
       'Digital Marketing Training',
       'CMS Management',
@@ -144,7 +143,6 @@ const Services = () => {
     <div className="min-h-screen">
       <Navbar />
       <main>
-        {/* Hero Section */}
         <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
           <div className="absolute inset-0 -z-10">
             <div className="absolute top-20 right-1/4 w-96 h-96 bg-orange-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
@@ -174,7 +172,6 @@ const Services = () => {
           </div>
         </section>
 
-        {/* Services List */}
         <section id="services-list" className="py-20">
           <div className="container-custom">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -218,7 +215,6 @@ const Services = () => {
           </div>
         </section>
         
-        {/* CTA Section */}
         <section className="bg-gray-100 dark:bg-gray-900/50 py-20">
           <div className="container-custom">
             <div className="glass-card p-10 md:p-16 relative overflow-hidden">
