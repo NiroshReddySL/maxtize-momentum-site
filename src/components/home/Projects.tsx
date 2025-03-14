@@ -2,36 +2,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-
-const projects = [
-  {
-    title: 'E-Commerce Redesign & SEO',
-    category: 'Web Development & SEO',
-    image: 'https://images.unsplash.com/photo-1661956602868-6ae368943878?auto=format&fit=crop&w=800&q=80',
-    link: '/projects/ecommerce-redesign'
-  },
-  {
-    title: 'Financial Services App',
-    category: 'Mobile App Development',
-    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80',
-    link: '/projects/financial-app'
-  },
-  {
-    title: 'Healthcare Marketing Campaign',
-    category: 'Digital Marketing',
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80',
-    link: '/projects/healthcare-campaign'
-  },
-  {
-    title: 'Travel Platform Optimization',
-    category: 'SEO & Analytics',
-    image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80',
-    link: '/projects/travel-platform'
-  }
-];
+import { projects } from '@/data/projects';
 
 const Projects = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  // Display only the first 4 projects on the homepage
+  const featuredProjects = projects.slice(0, 4);
 
   return (
     <section id="projects" className="section-padding bg-gray-50 dark:bg-gray-900/50">
@@ -55,10 +31,10 @@ const Projects = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
+          {featuredProjects.map((project, index) => (
             <Link 
               key={index}
-              to={project.link}
+              to={project.link || `/projects#${project.id}`}
               className="group relative overflow-hidden rounded-2xl shadow-lg h-[400px] hover-card-effect"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
