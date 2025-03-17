@@ -4,24 +4,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe } from 'lucide-react';
 import ThemeToggle from '../theme/ThemeToggle';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-
-// Available languages
-const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'en-GB', name: 'English (UK)', flag: '🇬🇧' },
-  { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
-  { code: 'kn', name: 'Kannada', flag: '🇮🇳' },
-  { code: 'te', name: 'Telugu', flag: '🇮🇳' },
-  { code: 'hi', name: 'Hindi', flag: '🇮🇳' },
-  { code: 'de', name: 'German', flag: '🇩🇪' }
-];
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { languages, useLanguage } from '@/contexts/LanguageContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [currentLang, setCurrentLang] = useState('en');
   const location = useLocation();
+  const { currentLang, changeLanguage, getCurrentLangInfo } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,18 +32,7 @@ const Navbar = () => {
   }, [location.pathname]);
 
   const isActive = (path: string) => {
-    return location.pathname === path;
-  };
-
-  const changeLanguage = (langCode: string) => {
-    setCurrentLang(langCode);
-    
-    // In a real app, this would redirect to the localized version
-    // For now, we'll just simulate by storing the selection
-    localStorage.setItem('preferredLanguage', langCode);
-    
-    // Optional: You could reload the page with the new language path
-    // window.location.href = `/${langCode}${location.pathname}`;
+    return location.pathname === path || location.pathname === `/${currentLang}${path}`;
   };
 
   return (
@@ -116,7 +95,7 @@ const Navbar = () => {
             <PopoverTrigger asChild>
               <button className="flex items-center space-x-1 text-sm font-medium">
                 <Globe size={18} />
-                <span>{languages.find(l => l.code === currentLang)?.flag}</span>
+                <span>{getCurrentLangInfo().flag}</span>
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-56 p-2" align="end">
@@ -182,7 +161,13 @@ const Navbar = () => {
                 <Menu size={24} />
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] pt-16">
+            <SheetContent side="right" className="w-[280px] pt-16 relative">
+              {/* Add close button */}
+              <SheetClose className="absolute right-4 top-4 p-1 rounded-sm ring-offset-background transition-opacity">
+                <X size={18} />
+                <span className="sr-only">Close</span>
+              </SheetClose>
+              
               <nav className="flex flex-col items-center space-y-8">
                 <Link
                   to="/"

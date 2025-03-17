@@ -1,5 +1,6 @@
 
 import { useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface HrefLangLink {
   lang: string;
@@ -25,8 +26,13 @@ const SEO = ({
   ogType = 'website',
   canonical,
   hrefLangs = [],
-  locale = 'en_US'
+  locale
 }: SEOProps) => {
+  const { currentLang } = useLanguage();
+  
+  // Use currentLang from context if locale is not provided
+  const actualLocale = locale || (currentLang === 'en-GB' ? 'en_GB' : currentLang === 'en' ? 'en_US' : currentLang);
+  
   useEffect(() => {
     // Update document title
     document.title = title;
@@ -40,7 +46,7 @@ const SEO = ({
     updateMetaTag('og:description', description);
     updateMetaTag('og:image', ogImage);
     updateMetaTag('og:type', ogType);
-    updateMetaTag('og:locale', locale);
+    updateMetaTag('og:locale', actualLocale);
     
     // Update Twitter tags
     updateMetaTag('twitter:card', 'summary_large_image');
@@ -49,7 +55,10 @@ const SEO = ({
     updateMetaTag('twitter:image', ogImage);
     
     // Update canonical link
-    updateLinkTag('canonical', canonical || window.location.href);
+    let canonicalUrl = canonical || window.location.href;
+    // Ensure canonical URL doesn't include query parameters
+    canonicalUrl = canonicalUrl.split('?')[0];
+    updateLinkTag('canonical', canonicalUrl);
     
     // Update hreflang links
     updateHrefLangLinks(hrefLangs);
@@ -57,9 +66,9 @@ const SEO = ({
     // Add x-default hreflang if not present
     const hasXDefault = hrefLangs.some(link => link.lang === 'x-default');
     if (!hasXDefault && hrefLangs.length > 0) {
-      updateLinkTag('alternate', canonical || window.location.href, 'x-default');
+      updateLinkTag('alternate', canonicalUrl, 'x-default');
     }
-  }, [title, description, keywords, ogImage, ogType, canonical, hrefLangs, locale]);
+  }, [title, description, keywords, ogImage, ogType, canonical, hrefLangs, actualLocale, currentLang]);
 
   const updateMetaTag = (name: string, content: string) => {
     let meta = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
