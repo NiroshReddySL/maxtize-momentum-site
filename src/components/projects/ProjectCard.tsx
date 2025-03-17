@@ -10,7 +10,7 @@ interface ProjectCardProps {
 
 const ProjectCard = ({ project }: ProjectCardProps) => {
   return (
-    <div className="glass-card overflow-hidden hover-card-effect">
+    <div className="glass-card overflow-hidden hover-card-effect transition-all duration-300 h-full flex flex-col">
       <div className="relative h-60 overflow-hidden">
         <img 
           src={project.image} 
@@ -24,7 +24,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
       </div>
       
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-grow">
         <div className="mb-4">
           <h2 className="text-xl font-bold mb-2">{project.title}</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm">Client: {project.client}</p>
@@ -34,7 +34,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           {project.description}
         </p>
         
-        <div className="mb-6">
+        <div className="mb-6 flex-grow">
           <h3 className="text-sm font-semibold mb-3">Key Results:</h3>
           <ul className="space-y-2">
             {project.results.map((result, idx) => (
@@ -63,7 +63,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         
         <Link 
           to={`/projects/${project.id}`} 
-          className="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium transition-colors"
+          className="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium transition-colors mt-auto"
         >
           View Case Study <ExternalLink size={16} className="ml-2" />
         </Link>

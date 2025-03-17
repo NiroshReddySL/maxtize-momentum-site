@@ -12,9 +12,15 @@ const Contact = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Define hreflang links
+  // Define hreflang links for international SEO
   const hrefLangs = [
     { lang: 'en', href: `${window.location.origin}/contact` },
+    { lang: 'en-GB', href: `${window.location.origin}/en-gb/contact` },
+    { lang: 'zh', href: `${window.location.origin}/zh/contact` },
+    { lang: 'kn', href: `${window.location.origin}/kn/contact` },
+    { lang: 'te', href: `${window.location.origin}/te/contact` },
+    { lang: 'hi', href: `${window.location.origin}/hi/contact` },
+    { lang: 'de', href: `${window.location.origin}/de/contact` },
     { lang: 'x-default', href: `${window.location.origin}/contact` }
   ];
 
