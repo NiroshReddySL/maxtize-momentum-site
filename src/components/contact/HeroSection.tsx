@@ -1,5 +1,7 @@
 
 import React from 'react';
+import ScrollReveal from '@/components/animations/ScrollReveal';
+import TextReveal from '@/components/animations/TextReveal';
 
 const HeroSection = () => {
   return (
@@ -10,16 +12,24 @@ const HeroSection = () => {
       </div>
       
       <div className="container-custom">
-        <div className="max-w-3xl mx-auto text-center animate-fade-in">
-          <span className="px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full text-sm font-medium">
-            Get in Touch
-          </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mt-6 mb-6">
-            Contact <span className="text-gradient">Maxtize</span>
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-10">
-            Have a complex digital challenge? We're ready to help. Reach out to discuss how we can work together.
-          </p>
+        <div className="max-w-3xl mx-auto text-center">
+          <ScrollReveal>
+            <span className="px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full text-sm font-medium">
+              Get in Touch
+            </span>
+          </ScrollReveal>
+          
+          <TextReveal
+            tag="h1"
+            text="Contact Maxtize"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mt-6 mb-6"
+          />
+          
+          <ScrollReveal delay={0.2}>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-10">
+              Have a complex digital challenge? We're ready to help. Reach out to discuss how we can work together.
+            </p>
+          </ScrollReveal>
         </div>
       </div>
     </section>

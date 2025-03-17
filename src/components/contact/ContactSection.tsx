@@ -2,6 +2,7 @@
 import React from 'react';
 import ContactForm from './ContactForm';
 import ContactInfo from './ContactInfo';
+import ScrollReveal from '@/components/animations/ScrollReveal';
 
 const ContactSection = () => {
   return (
@@ -9,14 +10,14 @@ const ContactSection = () => {
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Contact Form */}
-          <div className="order-2 lg:order-1">
+          <ScrollReveal className="order-2 lg:order-1" delay={0.2}>
             <ContactForm />
-          </div>
+          </ScrollReveal>
           
           {/* Contact Info */}
-          <div className="order-1 lg:order-2">
+          <ScrollReveal className="order-1 lg:order-2" direction="right" delay={0.1}>
             <ContactInfo />
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>
