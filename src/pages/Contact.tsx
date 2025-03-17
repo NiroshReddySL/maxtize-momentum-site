@@ -12,12 +12,20 @@ const Contact = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Define hreflang links
+  const hrefLangs = [
+    { lang: 'en', href: `${window.location.origin}/contact` },
+    { lang: 'x-default', href: `${window.location.origin}/contact` }
+  ];
+
   return (
     <div className="min-h-screen overflow-x-hidden">
       <SEO 
         title="Contact Maxtize - Get in Touch With Our Team"
         description="Have a complex digital challenge? We're ready to help. Reach out to discuss how we can work together."
         keywords="contact, digital agency, get in touch, project inquiry"
+        hrefLangs={hrefLangs}
+        locale="en_US"
       />
       <Navbar />
       <main>

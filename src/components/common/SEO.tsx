@@ -1,6 +1,11 @@
 
 import { useEffect } from 'react';
 
+interface HrefLangLink {
+  lang: string;
+  href: string;
+}
+
 interface SEOProps {
   title: string;
   description: string;
@@ -8,6 +13,8 @@ interface SEOProps {
   ogImage?: string;
   ogType?: 'website' | 'article';
   canonical?: string;
+  hrefLangs?: HrefLangLink[];
+  locale?: string;
 }
 
 const SEO = ({ 
@@ -16,7 +23,9 @@ const SEO = ({
   keywords, 
   ogImage = '/og-image.png', 
   ogType = 'website',
-  canonical
+  canonical,
+  hrefLangs = [],
+  locale = 'en_US'
 }: SEOProps) => {
   useEffect(() => {
     // Update document title
@@ -31,6 +40,7 @@ const SEO = ({
     updateMetaTag('og:description', description);
     updateMetaTag('og:image', ogImage);
     updateMetaTag('og:type', ogType);
+    updateMetaTag('og:locale', locale);
     
     // Update Twitter tags
     updateMetaTag('twitter:card', 'summary_large_image');
@@ -39,16 +49,17 @@ const SEO = ({
     updateMetaTag('twitter:image', ogImage);
     
     // Update canonical link
-    if (canonical) {
-      let link = document.querySelector('link[rel="canonical"]');
-      if (!link) {
-        link = document.createElement('link');
-        link.setAttribute('rel', 'canonical');
-        document.head.appendChild(link);
-      }
-      link.setAttribute('href', canonical);
+    updateLinkTag('canonical', canonical || window.location.href);
+    
+    // Update hreflang links
+    updateHrefLangLinks(hrefLangs);
+    
+    // Add x-default hreflang if not present
+    const hasXDefault = hrefLangs.some(link => link.lang === 'x-default');
+    if (!hasXDefault && hrefLangs.length > 0) {
+      updateLinkTag('alternate', canonical || window.location.href, 'x-default');
     }
-  }, [title, description, keywords, ogImage, ogType, canonical]);
+  }, [title, description, keywords, ogImage, ogType, canonical, hrefLangs, locale]);
 
   const updateMetaTag = (name: string, content: string) => {
     let meta = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
@@ -59,6 +70,44 @@ const SEO = ({
       document.head.appendChild(meta);
     }
     meta.setAttribute('content', content);
+  };
+  
+  const updateLinkTag = (rel: string, href?: string, hrefLang?: string) => {
+    if (!href) return;
+    
+    // For hreflang, we need to find by both rel and hreflang
+    const selector = hrefLang 
+      ? `link[rel="${rel}"][hreflang="${hrefLang}"]`
+      : `link[rel="${rel}"]`;
+      
+    let link = document.querySelector(selector);
+    
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', rel);
+      if (hrefLang) {
+        link.setAttribute('hreflang', hrefLang);
+      }
+      document.head.appendChild(link);
+    }
+    
+    link.setAttribute('href', href);
+  };
+  
+  const updateHrefLangLinks = (links: HrefLangLink[]) => {
+    // Remove old hreflangs that are not in the new list
+    const oldHrefLangs = document.querySelectorAll('link[rel="alternate"][hreflang]');
+    oldHrefLangs.forEach(link => {
+      const lang = link.getAttribute('hreflang');
+      if (lang !== 'x-default' && !links.some(l => l.lang === lang)) {
+        document.head.removeChild(link);
+      }
+    });
+    
+    // Add/update hreflangs
+    links.forEach(link => {
+      updateLinkTag('alternate', link.href, link.lang);
+    });
   };
 
   return null; // This component doesn't render anything

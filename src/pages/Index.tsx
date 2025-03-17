@@ -14,12 +14,20 @@ const Index = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Define hreflang links
+  const hrefLangs = [
+    { lang: 'en', href: `${window.location.origin}/` },
+    { lang: 'x-default', href: `${window.location.origin}/` }
+  ];
+
   return (
     <div className="min-h-screen overflow-x-hidden">
       <SEO 
         title="Maxtize - Digital Excellence for Growing Businesses"
         description="We're a young, dynamic team specializing in digital marketing, SEO, and full-stack development. No challenge is too complex for us."
         keywords="digital agency, web development, SEO, digital marketing, app development"
+        hrefLangs={hrefLangs}
+        locale="en_US"
       />
       <Navbar />
       <main>

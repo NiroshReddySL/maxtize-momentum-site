@@ -1,6 +1,6 @@
 
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useAnimation } from '@/contexts/AnimationContext';
 
 interface ScrollRevealProps {
@@ -9,6 +9,9 @@ interface ScrollRevealProps {
   delay?: number;
   direction?: 'up' | 'down' | 'left' | 'right' | 'none';
   duration?: number;
+  threshold?: number;
+  parallax?: boolean;
+  parallaxIntensity?: number;
 }
 
 const ScrollReveal = ({ 
@@ -16,21 +19,39 @@ const ScrollReveal = ({
   className = '', 
   delay = 0, 
   direction = 'up', 
-  duration = 0.5 
+  duration = 0.5,
+  threshold = 0.1,
+  parallax = false,
+  parallaxIntensity = 0.2
 }: ScrollRevealProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
   const { shouldAnimate } = useAnimation();
+  
+  // For parallax effect
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
+  
+  const y = useTransform(
+    scrollYProgress, 
+    [0, 1], 
+    parallax ? [parallaxIntensity * 100, -parallaxIntensity * 100] : [0, 0]
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsInView(true);
-          observer.disconnect();
+          // Don't disconnect for parallax effect
+          if (!parallax) {
+            observer.disconnect();
+          }
         }
       },
-      { threshold: 0.1 }
+      { threshold }
     );
 
     if (ref.current) {
@@ -40,7 +61,7 @@ const ScrollReveal = ({
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [parallax, threshold]);
 
   // Define animation variants based on direction
   let initialProps = {};
@@ -87,6 +108,7 @@ const ScrollReveal = ({
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={variants}
+      style={parallax ? { y } : {}}
     >
       {children}
     </motion.div>

@@ -61,12 +61,12 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           ))}
         </div>
         
-        <a 
-          href={`#${project.id}`} 
+        <Link 
+          to={`/projects/${project.id}`} 
           className="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium transition-colors"
         >
           View Case Study <ExternalLink size={16} className="ml-2" />
-        </a>
+        </Link>
       </div>
     </div>
   );
