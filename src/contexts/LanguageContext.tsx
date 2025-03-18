@@ -29,17 +29,24 @@ export const useLanguage = () => useContext(LanguageContext);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [currentLang, setCurrentLang] = useState('en');
-  const { lang } = useParams<{ lang: string }>();
+  const { lang } = useParams<{ lang?: string }>();
   const navigate = useNavigate();
+
+  // Debug output for troubleshooting
+  useEffect(() => {
+    console.log("LanguageProvider initialized with:", { lang, currentLang });
+  }, [lang, currentLang]);
 
   useEffect(() => {
     // Get language preference from URL parameter or localStorage
     const savedLang = localStorage.getItem('preferredLanguage');
     
     if (lang && languages.some(l => l.code === lang)) {
+      console.log("Setting language from URL param:", lang);
       setCurrentLang(lang);
       localStorage.setItem('preferredLanguage', lang);
     } else if (savedLang && languages.some(l => l.code === savedLang)) {
+      console.log("Setting language from localStorage:", savedLang);
       setCurrentLang(savedLang);
     }
   }, [lang]);
@@ -47,6 +54,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const changeLanguage = (langCode: string) => {
     if (langCode === currentLang) return;
     
+    console.log("Changing language to:", langCode);
     setCurrentLang(langCode);
     localStorage.setItem('preferredLanguage', langCode);
     

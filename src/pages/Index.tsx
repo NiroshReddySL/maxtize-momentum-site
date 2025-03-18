@@ -8,11 +8,17 @@ import Projects from '@/components/home/Projects';
 import Contact from '@/components/home/Contact';
 import Footer from '@/components/layout/Footer';
 import SEO from '@/components/common/SEO';
+import { useParams } from 'react-router-dom';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Index = () => {
+  const { lang } = useParams<{ lang?: string }>();
+  const { currentLang } = useLanguage();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    console.log("Index page mounted with language:", lang || currentLang);
+  }, [lang, currentLang]);
 
   // Define hreflang links for international SEO
   const hrefLangs = [
