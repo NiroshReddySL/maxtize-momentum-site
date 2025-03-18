@@ -1,43 +1,94 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  <!-- Homepage -->
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Home Page -->
   <url>
-    <loc>https://yourdomain.com/</loc>
+    <loc>https://maxtize.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://maxtize.com/" />
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://maxtize.com/en-gb/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://maxtize.com/de/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://maxtize.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://maxtize.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="kn" href="https://maxtize.com/kn/" />
+    <xhtml:link rel="alternate" hreflang="te" href="https://maxtize.com/te/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxtize.com/" />
   </url>
-  <!-- About -->
+  
+  <!-- Services Page -->
   <url>
-    <loc>https://yourdomain.com/about</loc>
+    <loc>https://maxtize.com/services</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://maxtize.com/services" />
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://maxtize.com/en-gb/services" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://maxtize.com/de/services" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://maxtize.com/zh/services" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://maxtize.com/hi/services" />
+    <xhtml:link rel="alternate" hreflang="kn" href="https://maxtize.com/kn/services" />
+    <xhtml:link rel="alternate" hreflang="te" href="https://maxtize.com/te/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxtize.com/services" />
   </url>
-  <!-- Services -->
+  
+  <!-- Projects Page -->
   <url>
-    <loc>https://yourdomain.com/services</loc>
+    <loc>https://maxtize.com/projects</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://maxtize.com/projects" />
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://maxtize.com/en-gb/projects" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://maxtize.com/de/projects" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://maxtize.com/zh/projects" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://maxtize.com/hi/projects" />
+    <xhtml:link rel="alternate" hreflang="kn" href="https://maxtize.com/kn/projects" />
+    <xhtml:link rel="alternate" hreflang="te" href="https://maxtize.com/te/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxtize.com/projects" />
   </url>
-  <!-- Projects -->
+  
+  <!-- Blog Page -->
   <url>
-    <loc>https://yourdomain.com/projects</loc>
+    <loc>https://maxtize.com/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://maxtize.com/blog" />
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://maxtize.com/en-gb/blog" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://maxtize.com/de/blog" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://maxtize.com/zh/blog" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://maxtize.com/hi/blog" />
+    <xhtml:link rel="alternate" hreflang="kn" href="https://maxtize.com/kn/blog" />
+    <xhtml:link rel="alternate" hreflang="te" href="https://maxtize.com/te/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxtize.com/blog" />
   </url>
-  <!-- Blog -->
+  
+  <!-- About Page -->
   <url>
-    <loc>https://yourdomain.com/blog</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <!-- Contact -->
-  <url>
-    <loc>https://yourdomain.com/contact</loc>
+    <loc>https://maxtize.com/about</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://maxtize.com/about" />
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://maxtize.com/en-gb/about" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://maxtize.com/de/about" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://maxtize.com/zh/about" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://maxtize.com/hi/about" />
+    <xhtml:link rel="alternate" hreflang="kn" href="https://maxtize.com/kn/about" />
+    <xhtml:link rel="alternate" hreflang="te" href="https://maxtize.com/te/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxtize.com/about" />
+  </url>
+  
+  <!-- Contact Page -->
+  <url>
+    <loc>https://maxtize.com/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://maxtize.com/contact" />
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://maxtize.com/en-gb/contact" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://maxtize.com/de/contact" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://maxtize.com/zh/contact" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://maxtize.com/hi/contact" />
+    <xhtml:link rel="alternate" hreflang="kn" href="https://maxtize.com/kn/contact" />
+    <xhtml:link rel="alternate" hreflang="te" href="https://maxtize.com/te/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://maxtize.com/contact" />
   </url>
 </urlset>

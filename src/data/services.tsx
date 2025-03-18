@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Globe, Search, Code, Smartphone, Paintbrush, BarChart3, Zap, Server, Award } from 'lucide-react';
 import { ServiceType } from '@/types/service';
@@ -16,7 +15,45 @@ export const services: ServiceType[] = [
       'PPC Advertising',
       'Conversion Optimization',
       'Marketing Automation'
-    ]
+    ],
+    translations: {
+      'de': {
+        title: 'Digitales Marketing',
+        description: 'Strategische Kampagnen, die Traffic generieren und Interessenten in treue Kunden umwandeln.',
+        features: [
+          'Social Media Marketing',
+          'Content-Strategie',
+          'E-Mail-Marketing-Kampagnen',
+          'PPC-Werbung',
+          'Konversionsoptimierung',
+          'Marketing-Automatisierung'
+        ]
+      },
+      'zh': {
+        title: '数字营销',
+        description: '策略性活动，吸引流量并将潜在客户转化为忠实客户。',
+        features: [
+          '社交媒体营销',
+          '内容策略',
+          '电子邮件营销活动',
+          'PPC广告',
+          '转化率优化',
+          '营销自动化'
+        ]
+      },
+      'hi': {
+        title: 'डिजिटल मार्केटिंग',
+        description: 'रणनीतिक अभियान जो ट्रैफिक चलाते हैं और संभावित ग्राहकों को वफादार ग्राहकों में बदलते हैं।',
+        features: [
+          'सोशल मीडिया मार्केटिंग',
+          'सामग्री रणनीति',
+          'ईमेल मार्केटिंग अभियान',
+          'PPC विज्ञापन',
+          'रूपांतरण अनुकूलन',
+          'मार्केटिंग ऑटोमेशन'
+        ]
+      }
+    }
   },
   {
     id: 'seo',
@@ -30,7 +67,33 @@ export const services: ServiceType[] = [
       'Local SEO',
       'Keyword Research',
       'SEO Audit & Strategy'
-    ]
+    ],
+    translations: {
+      'de': {
+        title: 'SEO-Optimierung',
+        description: 'Steigern Sie Ihre Online-Sichtbarkeit und erzielen Sie ein höheres Ranking in den Suchmaschinenergebnissen.',
+        features: [
+          'On-Page SEO',
+          'Off-Page SEO',
+          'Technisches SEO',
+          'Lokales SEO',
+          'Keyword-Recherche',
+          'SEO-Audit & Strategie'
+        ]
+      },
+      'zh': {
+        title: 'SEO优化',
+        description: '提高您的在线可见性，在搜索引擎结果中排名更高。',
+        features: [
+          '页面SEO',
+          '站外SEO',
+          '技术SEO',
+          '本地SEO',
+          '关键词研究',
+          'SEO审计和策略'
+        ]
+      }
+    }
   },
   {
     id: 'web-development',
