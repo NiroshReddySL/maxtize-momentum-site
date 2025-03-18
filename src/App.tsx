@@ -20,12 +20,12 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AnimationProvider>
-      <LanguageProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+    <BrowserRouter>
+      <AnimationProvider>
+        <LanguageProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
             <Routes>
               {/* Default routes */}
               <Route path="/" element={<Index />} />
@@ -50,10 +50,10 @@ const App = () => (
               {/* Catch all route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </LanguageProvider>
-    </AnimationProvider>
+          </TooltipProvider>
+        </LanguageProvider>
+      </AnimationProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 

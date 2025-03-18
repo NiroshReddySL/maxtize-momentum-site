@@ -18,6 +18,7 @@ const Index = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     console.log("Index page mounted with language:", lang || currentLang);
+    document.title = "Maxtize - Digital Excellence for Growing Businesses";
   }, [lang, currentLang]);
 
   // Define hreflang links for international SEO
@@ -31,6 +32,8 @@ const Index = () => {
     { lang: 'de', href: `${window.location.origin}/de/` },
     { lang: 'x-default', href: `${window.location.origin}/` }
   ];
+
+  console.log("Rendering Index page with components");
 
   return (
     <div className="min-h-screen overflow-x-hidden">

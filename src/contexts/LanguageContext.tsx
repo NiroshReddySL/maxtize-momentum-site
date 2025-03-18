@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 // Available languages
 export const languages = [
@@ -31,11 +31,17 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [currentLang, setCurrentLang] = useState('en');
   const { lang } = useParams<{ lang?: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Debug output for troubleshooting
+  // Enhanced debug logging
   useEffect(() => {
-    console.log("LanguageProvider initialized with:", { lang, currentLang });
-  }, [lang, currentLang]);
+    console.log("LanguageProvider initialized with:", { 
+      lang, 
+      currentLang,
+      pathname: location.pathname,
+      validLang: lang && languages.some(l => l.code === lang) ? "valid" : "invalid/undefined"
+    });
+  }, [lang, currentLang, location.pathname]);
 
   useEffect(() => {
     // Get language preference from URL parameter or localStorage
@@ -48,6 +54,8 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     } else if (savedLang && languages.some(l => l.code === savedLang)) {
       console.log("Setting language from localStorage:", savedLang);
       setCurrentLang(savedLang);
+    } else {
+      console.log("Using default language: en");
     }
   }, [lang]);
 
@@ -59,27 +67,32 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('preferredLanguage', langCode);
     
     // Update URL to reflect language change
-    const path = window.location.pathname;
+    const path = location.pathname;
     const isRoot = path === '/';
     const hasLangPrefix = languages.some(l => path.startsWith(`/${l.code}`));
     
-    if (langCode === 'en') {
-      // For English (default), remove language prefix
-      if (hasLangPrefix) {
-        const newPath = path.split('/').slice(2).join('/');
-        navigate(newPath ? `/${newPath}` : '/');
-      }
-    } else {
-      // For other languages, add or replace language prefix
-      if (isRoot) {
-        navigate(`/${langCode}`);
-      } else if (hasLangPrefix) {
-        const pathParts = path.split('/');
-        pathParts[1] = langCode;
-        navigate(pathParts.join('/'));
+    try {
+      if (langCode === 'en') {
+        // For English (default), remove language prefix
+        if (hasLangPrefix) {
+          const newPath = path.split('/').slice(2).join('/');
+          navigate(newPath ? `/${newPath}` : '/');
+        }
       } else {
-        navigate(`/${langCode}${path}`);
+        // For other languages, add or replace language prefix
+        if (isRoot) {
+          navigate(`/${langCode}`);
+        } else if (hasLangPrefix) {
+          const pathParts = path.split('/');
+          pathParts[1] = langCode;
+          navigate(pathParts.join('/'));
+        } else {
+          navigate(`/${langCode}${path}`);
+        }
       }
+      console.log("Navigation successful");
+    } catch (error) {
+      console.error("Error during navigation:", error);
     }
   };
 
