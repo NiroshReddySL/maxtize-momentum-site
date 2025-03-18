@@ -8,6 +8,7 @@ import RelatedPosts from '@/components/blog/RelatedPosts';
 import AuthorCard from '@/components/blog/AuthorCard';
 import CommentSection from '@/components/blog/CommentSection';
 import NewsletterSignup from '@/components/blog/NewsletterSignup';
+import ScrollProgress from '@/components/blog/ScrollProgress';
 import SEO from '@/components/common/SEO';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
@@ -29,6 +30,7 @@ const BlogPost = () => {
     
     if (postData) {
       setPost(postData);
+      document.title = `${postData.title} - Maxtize Blog`;
       
       // Find related posts based on category or tags
       setRelatedPosts(
@@ -91,6 +93,7 @@ const BlogPost = () => {
         locale="en_US"
       />
       <Navbar />
+      <ScrollProgress />
       <main>
         {/* Hero Section */}
         <section className="pt-32 pb-20 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
@@ -139,7 +142,7 @@ const BlogPost = () => {
         </section>
 
         {/* Featured Image */}
-        <section className="py-16">
+        <section className="py-12">
           <div className="container-custom">
             <ScrollReveal>
               <div className="max-w-4xl mx-auto">
@@ -148,6 +151,7 @@ const BlogPost = () => {
                     src={post.coverImage} 
                     alt={post.title} 
                     className="w-full h-auto"
+                    loading="eager" // Prioritize this image loading
                   />
                 </div>
               </div>
@@ -162,6 +166,7 @@ const BlogPost = () => {
               <div className="lg:col-span-8">
                 <ScrollReveal>
                   <div className="prose prose-lg dark:prose-invert max-w-none">
+                    {/* Ensure proper heading hierarchy for SEO */}
                     <div dangerouslySetInnerHTML={{ __html: post.content }} />
                   </div>
                 </ScrollReveal>
@@ -183,7 +188,7 @@ const BlogPost = () => {
                 <ScrollReveal>
                   <div className="mt-12 p-6 border border-gray-200 dark:border-gray-800 rounded-xl flex justify-between items-center">
                     <div>
-                      <h3 className="text-lg font-semibold mb-2">Share this article</h3>
+                      <h2 className="text-lg font-semibold mb-2">Share this article</h2>
                       <p className="text-gray-500 dark:text-gray-400">Help spread the word!</p>
                     </div>
                     <div className="flex gap-4">
@@ -210,7 +215,7 @@ const BlogPost = () => {
                 
                 <ScrollReveal delay={0.2}>
                   <div className="mt-12 sticky top-24">
-                    <h3 className="text-xl font-bold mb-6">Related Articles</h3>
+                    <h2 className="text-xl font-bold mb-6">Related Articles</h2>
                     <div className="space-y-6">
                       {relatedPosts.map((relatedPost, index) => (
                         <Link key={index} to={`/blog/${relatedPost.slug}`} className="block group">
@@ -219,13 +224,14 @@ const BlogPost = () => {
                               <img 
                                 src={relatedPost.coverImage} 
                                 alt={relatedPost.title}
-                                className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" 
+                                className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
                               />
                             </div>
                             <div className="col-span-3">
-                              <h4 className="text-base font-semibold group-hover:text-orange-500 transition-colors line-clamp-2">
+                              <h3 className="text-base font-semibold group-hover:text-orange-500 transition-colors line-clamp-2">
                                 {relatedPost.title}
-                              </h4>
+                              </h3>
                               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                                 {formatDate(relatedPost.publishDate)}
                               </p>

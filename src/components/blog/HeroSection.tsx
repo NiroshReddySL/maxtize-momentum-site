@@ -1,4 +1,3 @@
-
 import React, { useState, FormEvent, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search } from 'lucide-react';
@@ -27,7 +26,7 @@ const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const searchFromUrl = searchParams.get('search') || '';
-    if (searchFromUrl && searchFromUrl !== searchQuery) {
+    if (searchFromUrl) {
       setSearchQuery(searchFromUrl);
       setInputValue(searchFromUrl);
     }
@@ -35,23 +34,35 @@ const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    
+    // Update search query state
     setSearchQuery(inputValue);
     
     // Update URL with search query
-    const searchParams = new URLSearchParams(window.location.search);
+    const searchParams = new URLSearchParams(location.search);
+    
     if (inputValue.trim()) {
-      searchParams.set('search', inputValue);
+      searchParams.set('search', inputValue.trim());
     } else {
       searchParams.delete('search');
     }
     
-    const newSearch = searchParams.toString();
-    const basePath = location.pathname;
+    // Keep any existing category params
+    const category = searchParams.get('category');
+    if (!category) {
+      searchParams.delete('category');
+    }
     
+    const newSearch = searchParams.toString();
+    
+    // Use navigate to update URL without full page reload
     navigate({
-      pathname: basePath,
+      pathname: location.pathname,
       search: newSearch ? `?${newSearch}` : ''
-    }, { replace: true });
+    });
+    
+    // Log for debugging
+    console.log("Search submitted:", inputValue, "URL updated with search params:", newSearch);
   };
 
   // Get translated content based on current language
@@ -78,7 +89,34 @@ const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
         placeholder: "搜索文章、主题或关键词...",
         searchButton: "搜索"
       },
-      // Add other languages as needed
+      hi: {
+        badge: "हमारा ब्लॉग",
+        title: "डिजिटल विकास के लिए अंतर्दृष्टि",
+        description: "डिजिटल मार्केटिंग, वेब विकास और व्यापार विकास में नवीनतम रुझानों, रणनीतियों और अंतर्दृष्टि के साथ अपडेट रहें।",
+        placeholder: "लेख, विषय या कीवर्ड खोजें...",
+        searchButton: "खोज"
+      },
+      te: {
+        badge: "మా బ్లాగు",
+        title: "డిజిటల్ వృద్ధి కోసం అంతర్దృష్టులు",
+        description: "డిజిటల్ మార్కెటింగ్, వెబ్ డెవలప్మెంట్ మరియు వ్యಾपಾರ వృద్ధిలో తాజా ట్రెండ్స్, వ్యూహాలు మరియు అంతర్దృష్టులతో అప్డేట్గా ఉండండి.",
+        placeholder: "వ్యాసాలు, అంశాలు లేదా కీవర్డ్లను శోధించండి...",
+        searchButton: "శోధన"
+      },
+      kn: {
+        badge: "ನಮ್ಮ ಬ್ಲಾಗ್",
+        title: "ಡಿಜಿಟಲ್ ಬೆಳವಣಿಗೆಗಾಗಿ ಒಳನೋಟಗಳು",
+        description: "ಡಿಜಿಟಲ್ ಮಾರ್ಕೆಟಿಂಗ್, ವೆಬ್ ಡೆವಲಪ್ಮೆಂಟ್ ಮತ್ತು ವ್ಯಾಪಾರ ಬೆಳವಣಿಗೆಯಲ್ಲಿನ ಇತ್ತೀಚಿನ ಪ್ರವೃತ್ತಿಗಳು, ತಂತ್ರಗಳು ಮತ್ತು ಒಳನೋಟಗಳೊಂದಿಗೆ ನವೀಕರಿಸಿದ ಮಾಹಿತಿಗಳನ್ನು ಪಡೆಯಿರಿ.",
+        placeholder: "ಲೇಖನಗಳು, ವಿಷಯಗಳು ಅಥವಾ ಕೀವರ್ಡ್��ಗಳನ್ನು ಹುಡುಕಿ...",
+        searchButton: "ಹುಡುಕಿ"
+      },
+      'en-GB': {
+        badge: "Our Blog",
+        title: "Insights for Digital Growth",
+        description: "Stay updated with the latest trends, strategies, and insights in digital marketing, web development, and business growth.",
+        placeholder: "Search articles, topics, or keywords...",
+        searchButton: "Search"
+      }
     };
     
     return content[currentLang as keyof typeof content] || content.en;

@@ -16,6 +16,9 @@ const MobileNav = () => {
     return location.pathname === path || location.pathname === `/${currentLang}${path}`;
   };
 
+  // Close menu function
+  const closeMenu = () => setIsOpen(false);
+
   return (
     <div className="md:hidden flex items-center space-x-3">
       <LanguageSelector isMobile={true} />
@@ -27,7 +30,6 @@ const MobileNav = () => {
           <button
             className="text-foreground p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             aria-label="Toggle Menu"
-            onClick={() => setIsOpen(true)}
           >
             <Menu size={24} />
           </button>
@@ -35,8 +37,9 @@ const MobileNav = () => {
         <SheetContent side="right" className="w-[280px] pt-16 relative">
           {/* Close button */}
           <button 
-            onClick={() => setIsOpen(false)} 
+            onClick={closeMenu}
             className="absolute right-4 top-4 p-1 rounded-sm ring-offset-background transition-opacity hover:opacity-70"
+            aria-label="Close menu"
           >
             <X size={18} />
             <span className="sr-only">Close</span>
@@ -46,42 +49,42 @@ const MobileNav = () => {
             <Link
               to="/"
               className={`text-xl font-medium ${isActive('/') ? 'text-primary' : ''}`}
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
             >
               Home
             </Link>
             <Link
               to="/services"
               className={`text-xl font-medium ${isActive('/services') ? 'text-primary' : ''}`}
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
             >
               Services
             </Link>
             <Link
               to="/projects"
               className={`text-xl font-medium ${isActive('/projects') ? 'text-primary' : ''}`}
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
             >
               Projects
             </Link>
             <Link
               to="/blog"
               className={`text-xl font-medium ${isActive('/blog') ? 'text-primary' : ''}`}
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
             >
               Blog
             </Link>
             <Link
               to="/about"
               className={`text-xl font-medium ${isActive('/about') ? 'text-primary' : ''}`}
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
             >
               About
             </Link>
             <Link
               to="/contact"
-              className="btn-primary text-xl"
-              onClick={() => setIsOpen(false)}
+              className={`text-xl font-medium text-white bg-orange-500 px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors`}
+              onClick={closeMenu}
             >
               Contact Us
             </Link>

@@ -1,6 +1,6 @@
 
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState, useMemo } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/blog/HeroSection';
@@ -8,36 +8,25 @@ import BlogList from '@/components/blog/BlogList';
 import FeaturedPosts from '@/components/blog/FeaturedPosts';
 import CategoriesSection from '@/components/blog/CategoriesSection';
 import CTASection from '@/components/blog/CTASection';
+import ScrollProgress from '@/components/blog/ScrollProgress';
 import SEO from '@/components/common/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { BlogPostType } from '@/types/blog';
 import { blogPosts, blogCategories } from '@/data/blog';
+import { motion } from 'framer-motion';
 
 const Blog = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredPosts, setFilteredPosts] = useState<BlogPostType[]>(blogPosts);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category') || 'All';
+  const searchParam = searchParams.get('search') || '';
+  
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam);
+  const [searchQuery, setSearchQuery] = useState(searchParam);
   const { currentLang } = useLanguage();
   const location = useLocation();
   
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    
-    // Check for search or category params in URL
-    const searchParams = new URLSearchParams(location.search);
-    const categoryParam = searchParams.get('category');
-    const searchParam = searchParams.get('search');
-    
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-    }
-    
-    if (searchParam) {
-      setSearchQuery(searchParam);
-    }
-  }, [location.search]);
-
-  useEffect(() => {
+  // Use useMemo to compute filtered posts only when dependencies change
+  const filteredPosts = useMemo(() => {
     let filtered = [...blogPosts];
     
     // Filter by category if not 'All'
@@ -61,8 +50,44 @@ const Blog = () => {
       );
     }
     
-    setFilteredPosts(filtered);
-  }, [selectedCategory, searchQuery]);
+    return filtered;
+  }, [selectedCategory, searchQuery, blogPosts]);
+  
+  // Handle category selection
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    
+    // Update URL params
+    if (category === 'All') {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', category);
+    }
+    setSearchParams(searchParams);
+  };
+  
+  // Handle search query changes
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+  };
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = "Blog - Maxtize Digital Insights & Resources";
+    
+    // Update state from URL params on location change
+    const newCategoryParam = searchParams.get('category') || 'All';
+    const newSearchParam = searchParams.get('search') || '';
+    
+    if (newCategoryParam !== selectedCategory) {
+      setSelectedCategory(newCategoryParam);
+    }
+    
+    if (newSearchParam !== searchQuery) {
+      setSearchQuery(newSearchParam);
+    }
+    
+  }, [location.search]);
 
   // Define hreflang links for international SEO with current language
   const origin = window.location.origin;
@@ -77,30 +102,81 @@ const Blog = () => {
     { lang: 'x-default', href: `${origin}/blog` }
   ];
 
+  // Define translations for different languages
+  const getContent = () => {
+    const content = {
+      en: {
+        title: "Blog - Maxtize Digital Insights & Resources",
+        description: "Discover the latest insights, trends, and strategies in digital marketing, web development, and business growth."
+      },
+      de: {
+        title: "Blog - Maxtize Digitale Einblicke & Ressourcen",
+        description: "Entdecken Sie die neuesten Einblicke, Trends und Strategien im digitalen Marketing, in der Webentwicklung und im Unternehmenswachstum."
+      },
+      zh: {
+        title: "博客 - Maxtize 数字洞察与资源",
+        description: "探索数字营销、网站开发和业务增长方面的最新洞察、趋势和策略。"
+      },
+      hi: {
+        title: "ब्लॉग - Maxtize डिजिटल अंतर्दृष्टि और संसाधन",
+        description: "डिजिटल मार्केटिंग, वेब विकास और व्यापार विकास में नवीनतम अंतर्दृष्टि, रुझान और रणनीतियों की खोज करें।"
+      },
+      te: {
+        title: "బ్లాగు - Maxtize డిజిటల్ అంతర్దృష్టులు మరియు వనరులు",
+        description: "డిజిటల్ మార్కెటింగ్, వెబ్ డెవలప్మెంట్ మరియు వ్యాపార వృద్ధిలో తాజా అంతర్దృష్టులు, ట్రెండ్లు మరియు వ్యూహాలను కనుగొనండి."
+      },
+      kn: {
+        title: "ಬ್ಲಾಗ್ - Maxtize ಡಿಜಿಟಲ್ ಒಳನೋಟಗಳು ಮತ್ತು ಸಂಪನ್ಮೂಲಗಳು",
+        description: "ಡಿಜಿಟಲ್ ಮಾರ್ಕೆಟಿಂಗ್, ವೆಬ್ ಡೆವಲಪ್ಮೆಂಟ್ ಮತ್ತು ವ್ಯಾಪಾರ ಬೆಳವಣಿಗೆಯಲ್ಲಿ ಇತ್ತೀಚಿನ ಒಳನೋಟಗಳು, ಪ್ರವೃತ್ತಿಗಳು ಮತ್ತು ತಂತ್ರಗಳನ್ನು ಕಂಡುಹಿಡಿಯಿರಿ."
+      },
+      'en-GB': {
+        title: "Blog - Maxtize Digital Insights & Resources",
+        description: "Discover the latest insights, trends, and strategies in digital marketing, web development, and business growth."
+      }
+    };
+    
+    return content[currentLang as keyof typeof content] || content.en;
+  };
+
+  const content = getContent();
+
   return (
     <div className="min-h-screen overflow-x-hidden">
       <SEO 
-        title="Blog - Maxtize Digital Insights & Resources"
-        description="Discover the latest insights, trends, and strategies in digital marketing, web development, and business growth."
+        title={content.title}
+        description={content.description}
         keywords="digital marketing blog, web development insights, SEO tips, business growth strategies"
         hrefLangs={hrefLangs}
         locale={currentLang === 'en-GB' ? 'en_GB' : currentLang === 'en' ? 'en_US' : currentLang}
       />
       <Navbar />
-      <main>
+      <ScrollProgress />
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <HeroSection 
           searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          setSearchQuery={handleSearchChange}
         />
-        <FeaturedPosts posts={blogPosts.filter(post => post.featured).slice(0, 3)} />
+        
+        {!searchQuery && (
+          <FeaturedPosts 
+            posts={blogPosts.filter(post => post.featured).slice(0, 3)} 
+          />
+        )}
+        
         <CategoriesSection 
           categories={blogCategories} 
           selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
+          setSelectedCategory={handleCategoryChange}
         />
+        
         <BlogList posts={filteredPosts} />
+        
         <CTASection />
-      </main>
+      </motion.main>
       <Footer />
     </div>
   );
