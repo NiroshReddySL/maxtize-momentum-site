@@ -8,12 +8,7 @@ const ScrollProgress = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show progress bar after scrolling down a bit
-      if (window.scrollY > 100) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.scrollY > 100);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -22,7 +17,9 @@ const ScrollProgress = () => {
 
   return (
     <motion.div 
-      className={`fixed top-[74px] left-0 right-0 h-1 bg-orange-500 z-50 origin-left ${isVisible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+      className={`fixed top-[64px] left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-orange-600 z-50 origin-left ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      } transition-opacity duration-300`}
       style={{ scaleX: scrollYProgress }}
     />
   );

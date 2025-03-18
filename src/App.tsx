@@ -1,9 +1,8 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AnimationProvider } from "@/contexts/AnimationContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
@@ -15,6 +14,9 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import FAQs from "./pages/FAQs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +38,9 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/faqs" element={<FAQs />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/pricing" element={<Pricing />} />
               
               {/* Localized routes */}
               <Route path="/:lang" element={<Index />} />
@@ -46,6 +51,9 @@ const App = () => (
               <Route path="/:lang/blog" element={<Blog />} />
               <Route path="/:lang/blog/:slug" element={<BlogPost />} />
               <Route path="/:lang/contact" element={<Contact />} />
+              <Route path="/:lang/faqs" element={<FAQs />} />
+              <Route path="/:lang/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/:lang/pricing" element={<Pricing />} />
               
               {/* Catch all route */}
               <Route path="*" element={<NotFound />} />
