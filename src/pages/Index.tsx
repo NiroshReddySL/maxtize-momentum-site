@@ -8,6 +8,7 @@ import Hero from '@/components/home/Hero';
 import Services from '@/components/home/Services';
 import About from '@/components/home/About';
 import Projects from '@/components/home/Projects';
+import BlogSection from '@/components/home/BlogSection';
 import Contact from '@/components/home/Contact';
 import Footer from '@/components/layout/Footer';
 import SEO from '@/components/common/SEO';
@@ -87,6 +88,7 @@ const Index = () => {
           <Services />
           <About />
           <Projects />
+          <BlogSection />
           <Contact />
         </div>
       </motion.main>

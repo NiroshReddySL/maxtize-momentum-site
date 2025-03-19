@@ -1,10 +1,12 @@
-import React, { useState, FormEvent, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Search } from 'lucide-react';
+
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import TextReveal from '@/components/animations/TextReveal';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { motion } from 'framer-motion';
+import SearchForm from './hero/SearchForm';
+import HeroBackground from './hero/HeroBackground';
 
 interface HeroSectionProps {
   searchQuery: string;
@@ -12,15 +14,8 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
-  const [inputValue, setInputValue] = useState(searchQuery);
-  const navigate = useNavigate();
   const location = useLocation();
   const { currentLang } = useLanguage();
-
-  // Update input value when search query changes (e.g., from URL)
-  useEffect(() => {
-    setInputValue(searchQuery);
-  }, [searchQuery]);
 
   // Extract search from URL on component mount
   useEffect(() => {
@@ -28,42 +23,8 @@ const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
     const searchFromUrl = searchParams.get('search') || '';
     if (searchFromUrl) {
       setSearchQuery(searchFromUrl);
-      setInputValue(searchFromUrl);
     }
   }, [location.search, setSearchQuery]);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    
-    // Update search query state
-    setSearchQuery(inputValue);
-    
-    // Update URL with search query
-    const searchParams = new URLSearchParams(location.search);
-    
-    if (inputValue.trim()) {
-      searchParams.set('search', inputValue.trim());
-    } else {
-      searchParams.delete('search');
-    }
-    
-    // Keep any existing category params
-    const category = searchParams.get('category');
-    if (!category) {
-      searchParams.delete('category');
-    }
-    
-    const newSearch = searchParams.toString();
-    
-    // Use navigate to update URL without full page reload
-    navigate({
-      pathname: location.pathname,
-      search: newSearch ? `?${newSearch}` : ''
-    });
-    
-    // Log for debugging
-    console.log("Search submitted:", inputValue, "URL updated with search params:", newSearch);
-  };
 
   // Get translated content based on current language
   const getContent = () => {
@@ -99,7 +60,7 @@ const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
       te: {
         badge: "మా బ్లాగు",
         title: "డిజిటల్ వృద్ధి కోసం అంతర్దృష్టులు",
-        description: "డిజిటల్ మార్కెటింగ్, వెబ్ డెవలప్మెంట్ మరియు వ్యಾपಾರ వృద్ధిలో తాజా ట్రెండ్స్, వ్యూహాలు మరియు అంతర్దృష్టులతో అప్డేట్గా ఉండండి.",
+        description: "డిజిటల్ మార్కెటింగ్, వెబ్ డెవలప్మెంట్ మరియు వ్యాపార వృద్ధిలో తాజా ట్రెండ్స్, వ్యూహాలు మరియు అంతర్దృష్టులతో అప్డేట్గా ఉండండి.",
         placeholder: "వ్యాసాలు, అంశాలు లేదా కీవర్డ్లను శోధించండి...",
         searchButton: "శోధన"
       },
@@ -126,31 +87,7 @@ const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
 
   return (
     <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900/80 dark:to-gray-900/50 relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <motion.div 
-          className="absolute top-20 right-1/4 w-96 h-96 bg-gradient-to-br from-orange-200 to-pink-200 rounded-full filter blur-3xl opacity-20"
-          animate={{ 
-            scale: [1, 1.05, 1],
-            opacity: [0.2, 0.25, 0.2]
-          }}
-          transition={{ 
-            repeat: Infinity,
-            duration: 8
-          }}
-        />
-        <motion.div 
-          className="absolute bottom-20 left-1/4 w-96 h-96 bg-gradient-to-tr from-orange-300 to-yellow-200 rounded-full filter blur-3xl opacity-20"
-          animate={{ 
-            scale: [1, 1.05, 1],
-            opacity: [0.2, 0.15, 0.2]
-          }}
-          transition={{ 
-            repeat: Infinity,
-            duration: 7,
-            delay: 2
-          }}
-        />
-      </div>
+      <HeroBackground />
       
       <div className="container-custom">
         <div className="max-w-3xl mx-auto text-center">
@@ -172,24 +109,12 @@ const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
           </ScrollReveal>
           
           <ScrollReveal delay={0.2}>
-            <form onSubmit={handleSubmit} className="relative max-w-xl mx-auto">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                className="block w-full pl-12 pr-16 py-4 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                placeholder={content.placeholder}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full hover:from-orange-600 hover:to-orange-700 transition-colors"
-              >
-                {content.searchButton}
-              </button>
-            </form>
+            <SearchForm 
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              placeholder={content.placeholder}
+              searchButtonText={content.searchButton}
+            />
           </ScrollReveal>
         </div>
       </div>

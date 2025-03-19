@@ -87,6 +87,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     if (langCode === currentLang) return;
     
     console.log("Changing language to:", langCode);
+    const prevLang = currentLang;
     setCurrentLang(langCode);
     localStorage.setItem('preferredLanguage', langCode);
     
@@ -116,8 +117,25 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         }
       }
       
-      // Show language change notification
-      toast.success(`Language changed to ${languages.find(l => l.code === langCode)?.name}`);
+      // Get language information for toast
+      const langInfo = languages.find(l => l.code === langCode) || languages[0];
+      const prevLangInfo = languages.find(l => l.code === prevLang) || languages[0];
+      
+      // Show language change notification with a visual cue about the change
+      toast.success(
+        <div className="flex items-center gap-2">
+          <span className="font-semibold">{langInfo.flag}</span>
+          <span>
+            Language changed to <span className="font-semibold">{langInfo.name}</span> 
+            {prevLang && <span className="text-gray-500 text-sm ml-1">(from {prevLangInfo.name})</span>}
+          </span>
+        </div>,
+        {
+          position: "top-center",
+          duration: 3000,
+          className: "language-toast"
+        }
+      );
       
       console.log("Navigation successful");
     } catch (error) {

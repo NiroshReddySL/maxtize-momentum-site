@@ -6,9 +6,9 @@ import { ArrowRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import { useLanguage } from '@/contexts/LanguageContext';
+import ProjectCard from './ProjectCard';
 
 const Projects = () => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { currentLang } = useLanguage();
   
   // Display only the first 4 projects on the homepage
@@ -21,30 +21,26 @@ const Projects = () => {
         badge: "Our Portfolio",
         title: "Featured Projects & Case Studies",
         description: "Explore our hand-picked projects that showcase our expertise in solving complex digital challenges.",
-        viewAll: "View All Projects",
-        viewProject: "View Project"
+        viewAll: "View All Projects"
       },
       de: {
         badge: "Unser Portfolio",
         title: "Ausgewählte Projekte & Fallstudien",
         description: "Erkunden Sie unsere handverlesenen Projekte, die unsere Expertise bei der Lösung komplexer digitaler Herausforderungen zeigen.",
-        viewAll: "Alle Projekte anzeigen",
-        viewProject: "Projekt ansehen"
+        viewAll: "Alle Projekte anzeigen"
       },
       zh: {
         badge: "我们的作品集",
         title: "精选项目和案例研究",
         description: "探索我们精心挑选的项目，展示我们解决复杂数字挑战的专业知识。",
-        viewAll: "查看所有项目",
-        viewProject: "查看项目"
+        viewAll: "查看所有项目"
       },
       // Add other languages as needed
       'en-GB': {
         badge: "Our Portfolio",
         title: "Featured Projects & Case Studies",
         description: "Explore our hand-picked projects that showcase our expertise in solving complex digital challenges.",
-        viewAll: "View All Projects",
-        viewProject: "View Project"
+        viewAll: "View All Projects"
       }
     };
     
@@ -60,19 +56,6 @@ const Projects = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.15
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring",
-        damping: 20,
-        stiffness: 100
       }
     }
   };
@@ -134,9 +117,10 @@ const Projects = () => {
             >
               <Link 
                 to="/projects" 
-                className="btn-outline self-start md:self-auto group"
+                className="btn-outline self-start md:self-auto group flex items-center gap-2"
               >
-                {content.viewAll}
+                <span>{content.viewAll}</span>
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </Link>
             </motion.div>
           </ScrollReveal>
@@ -150,76 +134,9 @@ const Projects = () => {
           viewport={{ once: true, margin: "-100px" }}
         >
           {featuredProjects.map((project, index) => (
-            <motion.div 
-              key={index}
-              variants={itemVariants}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              <ScrollReveal delay={index * 0.15}>
-                <Link 
-                  to={project.link || `/projects/${project.id}`}
-                  className="group block relative overflow-hidden rounded-2xl shadow-lg h-[400px]"
-                >
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-80"
-                    animate={{ opacity: hoveredIndex === index ? 1 : 0.8 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                  
-                  <motion.img 
-                    src={project.image} 
-                    alt={project.title} 
-                    className="w-full h-full object-cover"
-                    animate={{ 
-                      scale: hoveredIndex === index ? 1.05 : 1,
-                    }}
-                    transition={{ duration: 0.7 }}
-                  />
-                  
-                  <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2, duration: 0.5 }}
-                    >
-                      <motion.span 
-                        className="inline-block px-3 py-1 bg-orange-500 text-white text-xs font-medium rounded-full mb-4"
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        {project.category}
-                      </motion.span>
-                      
-                      <motion.h3 
-                        className="text-2xl font-bold text-white mb-2"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 0.5 }}
-                      >
-                        {project.title}
-                      </motion.h3>
-                      
-                      <motion.div 
-                        className="flex items-center text-white mt-4 group-hover:translate-x-2 transition-transform duration-300"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: hoveredIndex === index ? 1 : 0.6 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <span className="font-medium mr-2">{content.viewProject}</span>
-                        <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
-                      </motion.div>
-                    </motion.div>
-                  </div>
-                  
-                  {/* Animated gradient overlay on hover */}
-                  <motion.div 
-                    className="absolute inset-0 opacity-0 bg-gradient-to-tr from-orange-500/20 to-pink-500/20"
-                    animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </Link>
-              </ScrollReveal>
-            </motion.div>
+            <ScrollReveal key={project.id} delay={index * 0.15}>
+              <ProjectCard project={project} index={index} />
+            </ScrollReveal>
           ))}
         </motion.div>
       </div>

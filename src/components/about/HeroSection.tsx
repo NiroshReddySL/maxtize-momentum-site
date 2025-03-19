@@ -1,28 +1,48 @@
 
 import React from 'react';
+import PageHero from '@/components/common/PageHero';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const HeroSection = () => {
+  const { currentLang } = useLanguage();
+  
+  // Get translated content based on current language
+  const getContent = () => {
+    const content = {
+      en: {
+        badge: "About Us",
+        title: "Young, Dynamic Team",
+        description: "We're not just another digital agency. We're a team of passionate young professionals who thrive on tackling complex problems and delivering exceptional results."
+      },
+      de: {
+        badge: "Über uns",
+        title: "Junges, dynamisches Team",
+        description: "Wir sind nicht nur eine weitere digitale Agentur. Wir sind ein Team von leidenschaftlichen jungen Fachleuten, die komplexe Probleme gerne anpacken und außergewöhnliche Ergebnisse liefern."
+      },
+      zh: {
+        badge: "关于我们",
+        title: "年轻，充满活力的团队",
+        description: "我们不仅仅是另一家数字机构。我们是一支充满激情的年轻专业团队，擅长解决复杂问题并提供卓越成果。"
+      },
+      'en-GB': {
+        badge: "About Us",
+        title: "Young, Dynamic Team",
+        description: "We're not just another digital agency. We're a team of passionate young professionals who thrive on tackling complex problems and delivering exceptional results."
+      }
+    };
+    
+    return content[currentLang as keyof typeof content] || content.en;
+  };
+
+  const content = getContent();
+
   return (
-    <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 right-1/4 w-96 h-96 bg-orange-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
-        <div className="absolute bottom-20 left-1/4 w-96 h-96 bg-orange-300 rounded-full filter blur-3xl opacity-20 animate-pulse-slow animation-delay-2000"></div>
-      </div>
-      
-      <div className="container-custom">
-        <div className="max-w-3xl mx-auto text-center animate-fade-in">
-          <span className="px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full text-sm font-medium">
-            About Us
-          </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mt-6 mb-6">
-            Young, <span className="text-gradient">Dynamic Team</span>
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-10">
-            We're not just another digital agency. We're a team of passionate young professionals who thrive on tackling complex problems and delivering exceptional results.
-          </p>
-        </div>
-      </div>
-    </section>
+    <PageHero
+      badge={content.badge}
+      title={content.title}
+      titleHighlight="Dynamic Team"
+      description={content.description}
+    />
   );
 };
 

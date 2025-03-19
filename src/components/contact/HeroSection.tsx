@@ -1,38 +1,47 @@
 
 import React from 'react';
-import ScrollReveal from '@/components/animations/ScrollReveal';
-import TextReveal from '@/components/animations/TextReveal';
+import PageHero from '@/components/common/PageHero';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const HeroSection = () => {
+  const { currentLang } = useLanguage();
+  
+  // Get translated content based on current language
+  const getContent = () => {
+    const content = {
+      en: {
+        badge: "Get in Touch",
+        title: "Contact Maxtize",
+        description: "Have a complex digital challenge? We're ready to help. Reach out to discuss how we can work together."
+      },
+      de: {
+        badge: "Kontaktieren Sie uns",
+        title: "Kontakt Maxtize",
+        description: "Haben Sie eine komplexe digitale Herausforderung? Wir sind bereit zu helfen. Kontaktieren Sie uns, um zu besprechen, wie wir zusammenarbeiten können."
+      },
+      zh: {
+        badge: "联系我们",
+        title: "联系 Maxtize",
+        description: "有复杂的数字挑战？我们随时准备帮助您。请联系我们，讨论如何一起合作。"
+      },
+      'en-GB': {
+        badge: "Get in Touch",
+        title: "Contact Maxtize",
+        description: "Have a complex digital challenge? We're ready to help. Reach out to discuss how we can work together."
+      }
+    };
+    
+    return content[currentLang as keyof typeof content] || content.en;
+  };
+
+  const content = getContent();
+
   return (
-    <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 right-1/4 w-96 h-96 bg-orange-200 rounded-full filter blur-3xl opacity-20 animate-pulse-slow"></div>
-        <div className="absolute bottom-20 left-1/4 w-96 h-96 bg-orange-300 rounded-full filter blur-3xl opacity-20 animate-pulse-slow animation-delay-2000"></div>
-      </div>
-      
-      <div className="container-custom">
-        <div className="max-w-3xl mx-auto text-center">
-          <ScrollReveal>
-            <span className="px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full text-sm font-medium">
-              Get in Touch
-            </span>
-          </ScrollReveal>
-          
-          <TextReveal
-            tag="h1"
-            text="Contact Maxtize"
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mt-6 mb-6"
-          />
-          
-          <ScrollReveal delay={0.2}>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-10">
-              Have a complex digital challenge? We're ready to help. Reach out to discuss how we can work together.
-            </p>
-          </ScrollReveal>
-        </div>
-      </div>
-    </section>
+    <PageHero
+      badge={content.badge}
+      title={content.title}
+      description={content.description}
+    />
   );
 };
 
