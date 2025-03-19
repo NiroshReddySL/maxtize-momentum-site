@@ -1,21 +1,24 @@
 
-import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from 'next-themes';
+import { AnimationProvider } from '@/contexts/AnimationContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import App from './App';
 import './index.css';
+import 'tailwindcss/tailwind.css';
 
-// Add some error handling to diagnose potential issues
-try {
-  const rootElement = document.getElementById('root');
-  
-  if (!rootElement) {
-    console.error('Failed to find the root element');
-    document.body.innerHTML = '<div style="color: red; padding: 20px;">Error: Could not find root element</div>';
-  } else {
-    console.log('Mounting React application...');
-    createRoot(rootElement).render(<App />);
-    console.log('React application mounted successfully');
-  }
-} catch (error) {
-  console.error('Failed to mount React application', error);
-  document.body.innerHTML = '<div style="color: red; padding: 20px;">Failed to initialize the application. Please check the console for details.</div>';
-}
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <LanguageProvider>
+          <AnimationProvider>
+            <App />
+          </AnimationProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </React.StrictMode>
+);

@@ -5,16 +5,25 @@ import DesktopNav from './DesktopNav';
 import MobileNav from './MobileNav';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTheme } from 'next-themes';
+import { Monitor, Moon, Sun } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import ScrollProgress from '@/components/blog/ScrollProgress';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const { currentLang } = useLanguage();
+  const { theme, setTheme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const { scrollYProgress } = useScroll();
   
   const opacity = useTransform(scrollYProgress, [0, 0.05], [1, 0.95]);
   const scale = useTransform(scrollYProgress, [0, 0.05], [1, 0.98]);
-  const height = useTransform(scrollYProgress, [0, 0.05], ['5rem', '4rem']);
+  const height = useTransform(scrollYProgress, [0, 0.05], ['5.5rem', '4.5rem']);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,12 +48,73 @@ const Navbar = () => {
     return translations[currentLang as keyof typeof translations] || "Maxtize";
   };
 
+  // Theme toggle component
+  const ThemeToggle = () => {
+    const renderThemeIcon = () => {
+      if (!mounted) return null;
+      
+      if (theme === 'dark') return <Moon size={18} />;
+      if (theme === 'light') return <Sun size={18} />;
+      return <Monitor size={18} />;
+    };
+
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <button className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700">
+            {renderThemeIcon()}
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-48 p-2" align="end">
+          <div className="grid grid-cols-1 gap-1">
+            <button
+              className={`flex items-center justify-between px-3 py-2 rounded-md transition-colors ${theme === 'light' ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+              onClick={() => setTheme('light')}
+            >
+              <div className="flex items-center gap-2">
+                <Sun size={16} />
+                <span>Light</span>
+              </div>
+              {theme === 'light' && (
+                <div className="w-2 h-2 rounded-full bg-orange-500" />
+              )}
+            </button>
+            <button
+              className={`flex items-center justify-between px-3 py-2 rounded-md transition-colors ${theme === 'dark' ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+              onClick={() => setTheme('dark')}
+            >
+              <div className="flex items-center gap-2">
+                <Moon size={16} />
+                <span>Dark</span>
+              </div>
+              {theme === 'dark' && (
+                <div className="w-2 h-2 rounded-full bg-orange-500" />
+              )}
+            </button>
+            <button
+              className={`flex items-center justify-between px-3 py-2 rounded-md transition-colors ${theme === 'system' ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+              onClick={() => setTheme('system')}
+            >
+              <div className="flex items-center gap-2">
+                <Monitor size={16} />
+                <span>System</span>
+              </div>
+              {theme === 'system' && (
+                <div className="w-2 h-2 rounded-full bg-orange-500" />
+              )}
+            </button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    );
+  };
+
   return (
     <>
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm'
+            ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm'
             : 'bg-transparent'
         }`}
         initial={{ y: -100 }}
@@ -65,8 +135,11 @@ const Navbar = () => {
             </motion.span>
           </Link>
 
-          <DesktopNav />
-          <MobileNav />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <DesktopNav />
+            <MobileNav />
+          </div>
         </div>
       </motion.header>
       <ScrollProgress />
