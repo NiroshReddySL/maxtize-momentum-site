@@ -1,7 +1,7 @@
 
-import { Link } from 'react-router-dom';
-import { Check } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -9,236 +9,261 @@ const About = () => {
   const { currentLang } = useLanguage();
   const { scrollYProgress } = useScroll();
   
-  // Parallax effect for images
-  const y1 = useTransform(scrollYProgress, [0.2, 0.6], [0, -50]);
-  const y2 = useTransform(scrollYProgress, [0.2, 0.6], [0, 50]);
-  const opacity = useTransform(scrollYProgress, [0.2, 0.6], [0, 1]);
+  // Parallax effects
+  const imageY = useTransform(scrollYProgress, [0.4, 0.7], [50, -50]);
+  const contentY = useTransform(scrollYProgress, [0.4, 0.7], [100, 0]);
   
-  // Get translated content
+  // Get translated content based on language
   const getContent = () => {
-    const translations = {
+    const content = {
       en: {
-        sectionTitle: "About Maxtize",
-        title: "Young, Dynamic Team Ready for Any Challenge",
-        description: "At Maxtize, we're not just another digital agency. We're a team of passionate young professionals who thrive on tackling complex problems and delivering exceptional results. Our fresh perspective, combined with technical expertise, allows us to approach challenges with innovative solutions.",
-        cta: "More About Us",
-        years: "5+ Years",
-        yearsSubtext: "Solving complex digital challenges",
-        advantages: [
-          'Quick turnaround on complex projects',
-          'Dedicated team of young experts',
-          'Cutting-edge technology solutions',
-          'Transparent communication',
-          'Focus on measurable results',
-          'Agile development methodology'
-        ]
+        badge: "About Us",
+        title: "Young, Dynamic & Ready for Challenges",
+        description: "We're a team of digital specialists who understand the unique challenges of growing businesses. With expertise in digital marketing, development, and design, we create tailored solutions that deliver measurable results.",
+        values: [
+          "Creative Problem-Solving",
+          "Client-Focused Approach",
+          "Continuous Innovation",
+          "Transparent Communication"
+        ],
+        cta: "Learn More About Us"
       },
       de: {
-        sectionTitle: "Über Maxtize",
-        title: "Junges, dynamisches Team bereit für jede Herausforderung",
-        description: "Bei Maxtize sind wir nicht nur eine weitere Digitalagentur. Wir sind ein Team junger, leidenschaftlicher Fachleute, die komplexe Probleme angehen und außergewöhnliche Ergebnisse liefern. Unsere frische Perspektive, kombiniert mit technischem Fachwissen, ermöglicht es uns, Herausforderungen mit innovativen Lösungen zu begegnen.",
-        cta: "Mehr über uns",
-        years: "5+ Jahre",
-        yearsSubtext: "Lösung komplexer digitaler Herausforderungen",
-        advantages: [
-          'Schnelle Bearbeitung komplexer Projekte',
-          'Engagiertes Team junger Experten',
-          'Innovative Technologielösungen',
-          'Transparente Kommunikation',
-          'Fokus auf messbare Ergebnisse',
-          'Agile Entwicklungsmethodik'
-        ]
+        badge: "Über Uns",
+        title: "Jung, Dynamisch & Bereit für Herausforderungen",
+        description: "Wir sind ein Team von Digital-Spezialisten, die die einzigartigen Herausforderungen wachsender Unternehmen verstehen. Mit Expertise in digitalem Marketing, Entwicklung und Design erstellen wir maßgeschneiderte Lösungen, die messbare Ergebnisse liefern.",
+        values: [
+          "Kreative Problemlösung",
+          "Kundenorientierter Ansatz",
+          "Kontinuierliche Innovation",
+          "Transparente Kommunikation"
+        ],
+        cta: "Mehr über uns erfahren"
       },
       zh: {
-        sectionTitle: "关于迈克斯泰兹",
-        title: "年轻、充满活力的团队准备迎接任何挑战",
-        description: "在迈克斯泰兹，我们不仅仅是另一家数字代理机构。我们是一支充满热情的年轻专业团队，擅长解决复杂问题并提供卓越的结果。我们的全新视角，结合技术专长，使我们能够以创新的解决方案应对挑战。",
-        cta: "了解更多关于我们",
-        years: "5+年",
-        yearsSubtext: "解决复杂的数字挑战",
-        advantages: [
-          '快速完成复杂项目',
-          '专业的年轻专家团队',
-          '尖端技术解决方案',
-          '透明沟通',
-          '注重可衡量的结果',
-          '敏捷开发方法'
-        ]
+        badge: "关于我们",
+        title: "年轻、充满活力，随时应对挑战",
+        description: "我们是一支数字专家团队，了解成长型企业的独特挑战。凭借数字营销、开发和设计方面的专业知识，我们创建定制解决方案，提供可衡量的结果。",
+        values: [
+          "创造性解决问题",
+          "以客户为中心的方法",
+          "持续创新",
+          "透明沟通"
+        ],
+        cta: "了解更多关于我们"
       },
-      // Add other translations as needed
-      hi: {
-        sectionTitle: "मैक्सटाइज़ के बारे में",
-        title: "किसी भी चुनौती के लिए तैयार युवा, गतिशील टीम",
-        description: "मैक्सटाइज़ में, हम सिर्फ एक और डिजिटल एजेंसी नहीं हैं। हम उत्साही युवा पेशेवरों की एक टीम हैं जो जटिल समस्याओं को सुलझाने और असाधारण परिणाम देने में माहिर हैं। हमारा ताज़ा दृष्टिकोण, तकनीकी विशेषज्ञता के साथ, हमें चुनौतियों को नवीन समाधानों के साथ सुलझाने की अनुमति देता है।",
-        cta: "हमारे बारे में अधिक जानें",
-        years: "5+ वर्ष",
-        yearsSubtext: "जटिल डिजिटल चुनौतियों का समाधान",
-        advantages: [
-          'जटिल परियोजनाओं पर त्वरित कार्रवाई',
-          'युवा विशेषज्ञों की समर्पित टीम',
-          'अत्याधुनिक तकनीकी समाधान',
-          'पारदर्शी संचार',
-          'मापने योग्य परिणामों पर ध्यान',
-          'एजाइल डेवलपमेंट मेथोडोलॉजी'
-        ]
-      },
-      // Add other languages
+      // Add other languages as needed
+      'en-GB': {
+        badge: "About Us",
+        title: "Young, Dynamic & Ready for Challenges",
+        description: "We're a team of digital specialists who understand the unique challenges of growing businesses. With expertise in digital marketing, development, and design, we create tailored solutions that deliver measurable results.",
+        values: [
+          "Creative Problem-Solving",
+          "Client-Focused Approach",
+          "Continuous Innovation",
+          "Transparent Communication"
+        ],
+        cta: "Learn More About Us"
+      }
     };
     
-    return translations[currentLang as keyof typeof translations] || translations.en;
+    return content[currentLang as keyof typeof content] || content.en;
   };
 
   const content = getContent();
-  
+
   // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-  
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { type: "spring", stiffness: 100 }
+      transition: {
+        type: "spring",
+        damping: 15,
+        stiffness: 50
+      }
     }
   };
 
   return (
-    <section id="about" className="section-padding overflow-hidden bg-white/50 dark:bg-gray-900/50 relative">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute left-0 w-full h-full bg-gradient-to-br from-orange-50 to-white dark:from-gray-900 dark:to-gray-900/0 opacity-60"></div>
+    <section id="about" className="relative py-20 md:py-32 bg-white dark:bg-gray-900 overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 overflow-hidden">
         <motion.div 
-          className="absolute right-0 bottom-0 w-96 h-96 bg-gradient-to-br from-orange-200/30 to-pink-200/30 dark:from-orange-900/10 dark:to-pink-900/10 rounded-full filter blur-3xl"
-          style={{ y: y2, opacity }}
+          className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-br from-orange-100/30 to-pink-100/30 dark:from-orange-900/10 dark:to-pink-900/10 rounded-full blur-3xl"
+          animate={{
+            y: [0, 30, 0],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-blue-100/30 to-purple-100/30 dark:from-blue-900/10 dark:to-purple-900/10 rounded-full blur-3xl"
+          animate={{
+            y: [0, -20, 0],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
         />
       </div>
-      
+
       <div className="container-custom relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="relative order-2 lg:order-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Image column with animations */}
+          <motion.div style={{ y: imageY }} className="order-2 lg:order-1">
             <ScrollReveal direction="left">
-              <motion.div className="relative">
-                <div className="relative z-10 rounded-2xl overflow-hidden shadow-xl">
-                  <img 
-                    src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80" 
-                    alt="Maxtize team" 
-                    className="w-full h-auto object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                </div>
-                
+              <div className="relative">
+                {/* Main image */}
                 <motion.div 
-                  className="absolute -bottom-6 right-10 glass-card p-6 max-w-xs shadow-xl"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.5 }}
-                  viewport={{ once: true }}
+                  className="overflow-hidden rounded-2xl shadow-xl"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <div className="text-4xl font-bold text-gradient mb-2">{content.years}</div>
-                  <p className="text-gray-600 dark:text-gray-300">{content.yearsSubtext}</p>
+                  <img
+                    src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80"
+                    alt="Team working together"
+                    className="w-full h-auto object-cover rounded-2xl"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-60 rounded-2xl"></div>
                 </motion.div>
                 
-                {/* Floating shapes */}
+                {/* Floating badges/decorative elements */}
                 <motion.div 
-                  className="absolute -top-8 -right-8 w-24 h-24 bg-orange-200 dark:bg-orange-900/30 rounded-full z-0"
-                  style={{ y: y1 }}
+                  className="absolute -top-6 -right-6 bg-white dark:bg-gray-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 z-10"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.6, duration: 0.5 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <span className="text-3xl">🚀</span>
+                  <span className="text-sm font-medium text-gray-800 dark:text-white">50+ Experts</span>
+                </motion.div>
+                
+                <motion.div 
+                  className="absolute -bottom-6 -left-6 bg-white dark:bg-gray-800 px-4 py-3 rounded-lg shadow-lg z-10"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.8, duration: 0.5 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className="text-sm font-medium text-gray-800 dark:text-white">
+                    <span className="block text-orange-500 text-xl font-bold">200+</span>
+                    <span>Projects Completed</span>
+                  </div>
+                </motion.div>
+                
+                {/* Animated shapes */}
+                <motion.div 
+                  className="hidden md:block absolute -top-10 left-20 w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full z-0"
                   animate={{ 
-                    scale: [1, 1.1, 1],
-                    opacity: [0.5, 0.7, 0.5]
+                    y: [0, -15, 0],
+                    rotate: [0, 10, 0]
                   }}
                   transition={{ 
-                    duration: 4,
                     repeat: Infinity,
-                    repeatType: "reverse"
-                  }}
-                />
-                <motion.div 
-                  className="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-200 dark:bg-blue-900/30 rounded-full z-0"
-                  style={{ y: y2 }}
-                  animate={{ 
-                    scale: [1, 1.15, 1],
-                    opacity: [0.5, 0.7, 0.5]
-                  }}
-                  transition={{ 
                     duration: 5,
-                    delay: 1,
-                    repeat: Infinity,
-                    repeatType: "reverse"
+                    ease: "easeInOut" 
                   }}
                 />
-              </motion.div>
-            </ScrollReveal>
-          </div>
-          
-          <div className="space-y-8 order-1 lg:order-2">
-            <ScrollReveal>
-              <div className="inline-block">
-                <span className="px-4 py-2 bg-gradient-to-r from-orange-100 to-orange-200 dark:from-orange-900/30 dark:to-orange-800/30 text-orange-600 dark:text-orange-400 rounded-full text-sm font-medium">
-                  {content.sectionTitle}
-                </span>
+                
+                <motion.div 
+                  className="hidden md:block absolute -bottom-8 right-20 w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-md rotate-12 z-0"
+                  animate={{ 
+                    y: [0, 15, 0],
+                    rotate: [12, 0, 12]
+                  }}
+                  transition={{ 
+                    repeat: Infinity,
+                    duration: 6,
+                    ease: "easeInOut",
+                    delay: 1 
+                  }}
+                />
               </div>
             </ScrollReveal>
-            
-            <ScrollReveal delay={0.1}>
-              <h2 className="text-3xl md:text-4xl font-bold">
-                <span className="text-gray-900 dark:text-white">{content.title.split(',')[0]},</span> <span className="text-gradient bg-gradient-to-r from-orange-500 to-orange-700 bg-clip-text text-transparent">{content.title.split(',')[1]}</span>
+          </motion.div>
+          
+          {/* Content column */}
+          <motion.div 
+            className="order-1 lg:order-2"
+            style={{ y: contentY }}
+          >
+            <ScrollReveal direction="right">
+              <motion.span 
+                className="inline-block px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full text-sm font-medium"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                {content.badge}
+              </motion.span>
+              
+              <h2 className="text-3xl md:text-4xl font-bold mt-4 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300">
+                {content.title}
               </h2>
-            </ScrollReveal>
-            
-            <ScrollReveal delay={0.2}>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              
+              <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
                 {content.description}
               </p>
-            </ScrollReveal>
-            
-            <ScrollReveal delay={0.3}>
-              <motion.div 
-                className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
+              
+              <div className="space-y-4 mb-10">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Our Core Values:</h3>
+                
+                <motion.ul 
+                  className="space-y-3"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: { 
+                      opacity: 1,
+                      transition: { staggerChildren: 0.2 }
+                    }
+                  }}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                >
+                  {content.values.map((value, index) => (
+                    <motion.li 
+                      key={index}
+                      className="flex items-start"
+                      variants={itemVariants}
+                    >
+                      <div className="mr-3 mt-1 flex-shrink-0">
+                        <div className="p-1 bg-orange-100 dark:bg-orange-900/30 text-orange-500 rounded-full">
+                          <ChevronRight size={14} />
+                        </div>
+                      </div>
+                      <span className="text-gray-700 dark:text-gray-300">{value}</span>
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              </div>
+              
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
               >
-                {content.advantages.map((advantage, index) => (
-                  <motion.div 
-                    key={index} 
-                    className="flex items-center space-x-2"
-                    variants={itemVariants}
-                  >
-                    <div className="w-5 h-5 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0">
-                      <Check size={12} className="text-white" />
-                    </div>
-                    <span className="text-gray-700 dark:text-gray-200">{advantage}</span>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </ScrollReveal>
-            
-            <ScrollReveal delay={0.4}>
-              <div className="pt-4">
                 <Link 
                   to="/about" 
-                  className="btn-primary group inline-flex items-center gap-2 relative overflow-hidden"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/30"
                 >
-                  <span className="relative z-10">{content.cta}</span>
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-500"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: 0 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  <span>{content.cta}</span>
+                  <ChevronRight size={16} />
                 </Link>
-              </div>
+              </motion.div>
             </ScrollReveal>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
