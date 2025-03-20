@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Contact from "./pages/Contact";
@@ -29,6 +30,7 @@ const App = () => (
         <Route path="/" element={<Index />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/services/:id" element={<ServiceDetail />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:id" element={<ProjectDetail />} />
         <Route path="/blog" element={<Blog />} />
@@ -42,6 +44,7 @@ const App = () => (
         <Route path="/:lang" element={<Index />} />
         <Route path="/:lang/about" element={<About />} />
         <Route path="/:lang/services" element={<Services />} />
+        <Route path="/:lang/services/:id" element={<ServiceDetail />} />
         <Route path="/:lang/projects" element={<Projects />} />
         <Route path="/:lang/projects/:id" element={<ProjectDetail />} />
         <Route path="/:lang/blog" element={<Blog />} />
