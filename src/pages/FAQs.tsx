@@ -128,7 +128,6 @@ const FAQs = () => {
   };
 
   const content = faqTranslations[currentLang as keyof typeof faqTranslations] || faqTranslations.en;
-  const [activeCategory, setActiveCategory] = useState("general");
 
   return (
     <div className="min-h-screen">
