@@ -1,41 +1,55 @@
 
 import { useState, useEffect } from 'react';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Monitor } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 const ThemeToggle = () => {
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      // Check for saved theme preference or system preference
-      return (
-        localStorage.getItem('theme') === 'dark' ||
-        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-      );
-    }
-    return false;
-  });
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
+  // After mounting, we can access the theme
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
+    setMounted(true);
+  }, []);
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
+  if (!mounted) {
+    return <div className="w-[100px] h-9 bg-gray-200 dark:bg-gray-800 rounded-md animate-pulse" />;
+  }
 
   return (
-    <button
-      onClick={toggleTheme}
-      className="relative p-2 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
-      aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+    <ToggleGroup
+      type="single"
+      value={theme}
+      onValueChange={(value) => {
+        if (value) setTheme(value);
+      }}
+      className="bg-gray-100 dark:bg-gray-800 rounded-md p-1"
     >
-      {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-    </button>
+      <ToggleGroupItem 
+        value="light" 
+        aria-label="Light mode"
+        className={`${theme === 'light' ? 'bg-white dark:bg-gray-700' : ''} rounded-md`}
+      >
+        <Sun size={18} />
+      </ToggleGroupItem>
+      
+      <ToggleGroupItem 
+        value="dark" 
+        aria-label="Dark mode"
+        className={`${theme === 'dark' ? 'bg-white dark:bg-gray-700' : ''} rounded-md`}
+      >
+        <Moon size={18} />
+      </ToggleGroupItem>
+      
+      <ToggleGroupItem 
+        value="system" 
+        aria-label="System mode"
+        className={`${theme === 'system' ? 'bg-white dark:bg-gray-700' : ''} rounded-md`}
+      >
+        <Monitor size={18} />
+      </ToggleGroupItem>
+    </ToggleGroup>
   );
 };
 
