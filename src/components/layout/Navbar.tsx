@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DesktopNav from './DesktopNav';
@@ -6,7 +5,6 @@ import MobileNav from './MobileNav';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
-import ThemeToggle from '@/components/theme/ThemeToggle';
 import ScrollProgress from '@/components/blog/ScrollProgress';
 
 const Navbar = () => {
@@ -74,7 +72,6 @@ const Navbar = () => {
           </Link>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <DesktopNav />
             <MobileNav />
           </div>

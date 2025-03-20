@@ -2,7 +2,13 @@
 import { useState, useEffect } from 'react';
 import { Moon, Sun, Monitor } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
@@ -14,42 +20,48 @@ const ThemeToggle = () => {
   }, []);
 
   if (!mounted) {
-    return <div className="w-[100px] h-9 bg-gray-200 dark:bg-gray-800 rounded-md animate-pulse" />;
+    return <div className="w-[42px] h-[42px] bg-gray-200 dark:bg-gray-800 rounded-md animate-pulse" />;
   }
 
+  // Get the current theme icon
+  const getCurrentIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun size={18} />;
+      case 'dark':
+        return <Moon size={18} />;
+      case 'system':
+      default:
+        return <Monitor size={18} />;
+    }
+  };
+
   return (
-    <ToggleGroup
-      type="single"
-      value={theme}
-      onValueChange={(value) => {
-        if (value) setTheme(value);
-      }}
-      className="bg-gray-100 dark:bg-gray-800 rounded-md p-1"
-    >
-      <ToggleGroupItem 
-        value="light" 
-        aria-label="Light mode"
-        className={`${theme === 'light' ? 'bg-white dark:bg-gray-700' : ''} rounded-md`}
-      >
-        <Sun size={18} />
-      </ToggleGroupItem>
-      
-      <ToggleGroupItem 
-        value="dark" 
-        aria-label="Dark mode"
-        className={`${theme === 'dark' ? 'bg-white dark:bg-gray-700' : ''} rounded-md`}
-      >
-        <Moon size={18} />
-      </ToggleGroupItem>
-      
-      <ToggleGroupItem 
-        value="system" 
-        aria-label="System mode"
-        className={`${theme === 'system' ? 'bg-white dark:bg-gray-700' : ''} rounded-md`}
-      >
-        <Monitor size={18} />
-      </ToggleGroupItem>
-    </ToggleGroup>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="w-[42px] h-[42px] rounded-md bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+        >
+          {getCurrentIcon()}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme('light')}>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>Light</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
+          <Moon className="mr-2 h-4 w-4" />
+          <span>Dark</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('system')}>
+          <Monitor className="mr-2 h-4 w-4" />
+          <span>System</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

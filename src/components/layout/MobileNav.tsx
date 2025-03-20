@@ -1,12 +1,11 @@
-
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import ThemeToggle from '../theme/ThemeToggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import LanguageSelector from './LanguageSelector';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import ThemeToggle from '../theme/ThemeToggle';
 
 const MobileNav = () => {
   const location = useLocation();
@@ -53,8 +52,7 @@ const MobileNav = () => {
       faqs: "Häufige Fragen",
       privacy: "Datenschutzerklärung",
       pricing: "Preise"
-    },
-    // Add other language translations
+    }
   };
 
   return (
