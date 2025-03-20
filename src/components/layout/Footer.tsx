@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
@@ -17,7 +16,7 @@ const Footer = () => {
         contact: "Contact",
         policies: "Policies",
         privacy: "Privacy Policy",
-        terms: "Terms of Service",
+        terms: "Terms of Use",
         resources: "Resources",
         blog: "Blog",
         faqs: "FAQs",
@@ -179,9 +178,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
+                <Link to="/terms-of-use" className="text-gray-600 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
                   {links.terms}
-                </a>
+                </Link>
               </li>
             </ul>
           </motion.div>
@@ -253,9 +252,9 @@ const Footer = () => {
             <Link to="/privacy-policy" className="text-gray-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 text-sm transition-colors">
               {links.privacy}
             </Link>
-            <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 text-sm transition-colors">
+            <Link to="/terms-of-use" className="text-gray-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 text-sm transition-colors">
               {links.terms}
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

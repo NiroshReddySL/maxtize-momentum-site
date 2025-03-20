@@ -1,19 +1,17 @@
-
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import ScrollReveal from '@/components/animations/ScrollReveal';
 import SEO from '@/components/common/SEO';
-import { Link } from 'react-router-dom';
-import { ArrowRight, Mail, Phone } from 'lucide-react';
+import HeroSection from '@/components/faqs/HeroSection';
+import CategorySelector from '@/components/faqs/CategorySelector';
+import FAQCategory from '@/components/faqs/FAQCategory';
+import ContactCTA from '@/components/faqs/ContactCTA';
+
+interface FAQItem {
+  q: string;
+  a: string;
+}
 
 const FAQs = () => {
   const { currentLang } = useLanguage();
@@ -129,6 +127,28 @@ const FAQs = () => {
 
   const content = faqTranslations[currentLang as keyof typeof faqTranslations] || faqTranslations.en;
 
+  const generateFAQSchema = () => {
+    const allFaqs: FAQItem[] = [];
+    Object.values(content.faqs).forEach((categoryFaqs: any) => {
+      allFaqs.push(...categoryFaqs);
+    });
+
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": allFaqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.a
+        }
+      }))
+    };
+
+    return JSON.stringify(schema);
+  };
+
   return (
     <div className="min-h-screen">
       <SEO 
@@ -138,103 +158,33 @@ const FAQs = () => {
       <Navbar />
       <main className="pt-32 pb-20">
         <div className="container-custom">
-          <ScrollReveal>
-            <div className="text-center mb-16">
-              <motion.span 
-                className="inline-block px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full text-sm font-medium mb-4"
-                whileHover={{ scale: 1.05 }}
-              >
-                FAQ
-              </motion.span>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300">
-                {content.title}
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                {content.subtitle}
-              </p>
-            </div>
-          </ScrollReveal>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: generateFAQSchema() }}
+          />
+          
+          <HeroSection 
+            title={content.title} 
+            subtitle={content.subtitle} 
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 mb-20">
-            <ScrollReveal className="lg:col-span-1">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-32">
-                <h3 className="font-semibold text-lg mb-4">
-                  {currentLang === 'en' ? 'Categories' : 
-                   currentLang === 'de' ? 'Kategorien' : 
-                   currentLang === 'zh' ? '类别' : 'Categories'}
-                </h3>
-                <nav className="space-y-2">
-                  {content.categories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => setActiveCategory(category.id)}
-                      className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                        activeCategory === category.id 
-                          ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 font-medium' 
-                          : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                      }`}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
-                </nav>
-              </div>
-            </ScrollReveal>
+            <CategorySelector 
+              categories={content.categories}
+              activeCategory={activeCategory}
+              onCategoryChange={setActiveCategory}
+            />
 
-            <ScrollReveal className="lg:col-span-3" delay={0.2}>
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
-                <h2 className="text-2xl font-bold mb-6">
-                  {content.categories.find(c => c.id === activeCategory)?.label}
-                </h2>
-                
-                <Accordion type="single" collapsible className="space-y-4">
-                  {content.faqs[activeCategory as keyof typeof content.faqs]?.map((faq, index) => (
-                    <AccordionItem 
-                      key={index} 
-                      value={`item-${index}`}
-                      className="border border-gray-100 dark:border-gray-700 rounded-lg px-6"
-                    >
-                      <AccordionTrigger className="text-left py-5 text-lg font-medium">
-                        {faq.q}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-gray-600 dark:text-gray-300 pb-5">
-                        {faq.a}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            </ScrollReveal>
+            <FAQCategory 
+              title={content.categories.find(c => c.id === activeCategory)?.label || ''}
+              faqs={content.faqs[activeCategory as keyof typeof content.faqs] || []}
+            />
           </div>
 
-          <ScrollReveal delay={0.4}>
-            <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl p-10 text-center mb-10">
-              <h3 className="text-2xl font-bold mb-4">{content.contactText}</h3>
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-8">
-                <Link 
-                  to="/contact" 
-                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  {content.contactCta}
-                  <ArrowRight size={16} className="ml-2" />
-                </Link>
-                
-                <a 
-                  href="mailto:info@maxtize.com" 
-                  className="inline-flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
-                >
-                  <Mail size={18} /> info@maxtize.com
-                </a>
-                
-                <a 
-                  href="tel:+1234567890" 
-                  className="inline-flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
-                >
-                  <Phone size={18} /> +1 (234) 567-890
-                </a>
-              </div>
-            </div>
-          </ScrollReveal>
+          <ContactCTA 
+            contactText={content.contactText}
+            contactCta={content.contactCta}
+          />
         </div>
       </main>
       <Footer />

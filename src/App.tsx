@@ -17,6 +17,8 @@ import BlogPost from "./pages/BlogPost";
 import FAQs from "./pages/FAQs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Pricing from "./pages/Pricing";
+import TermsOfUse from "./pages/TermsOfUse";
+import CookieConsent from "./components/common/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,7 @@ const App = () => (
         <Route path="/faqs" element={<FAQs />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/terms-of-use" element={<TermsOfUse />} />
         
         {/* Localized routes */}
         <Route path="/:lang" element={<Index />} />
@@ -53,10 +56,12 @@ const App = () => (
         <Route path="/:lang/faqs" element={<FAQs />} />
         <Route path="/:lang/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/:lang/pricing" element={<Pricing />} />
+        <Route path="/:lang/terms-of-use" element={<TermsOfUse />} />
         
         {/* Catch all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <CookieConsent />
     </TooltipProvider>
   </QueryClientProvider>
 );
