@@ -1,4 +1,3 @@
-
 import { BlogPostType, AuthorType } from '@/types/blog';
 
 // Authors
@@ -541,6 +540,9 @@ html {
     featured: false
   }
 ];
+
+// Export blogPosts as posts for backward compatibility
+export const posts = blogPosts;
 
 // Categories for filtering
 export const blogCategories = [

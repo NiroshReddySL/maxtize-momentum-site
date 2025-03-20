@@ -1,9 +1,9 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CalendarDays, ArrowRight, Clock, Tag } from 'lucide-react';
-import { posts } from '@/data/blog';
+import { blogPosts as posts } from '@/data/blog'; // Fixed import
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatDate } from '@/utils/formatDate';
@@ -187,11 +187,11 @@ const BlogSection = () => {
                     <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
                       <div className="flex items-center gap-1.5">
                         <CalendarDays size={14} />
-                        <span>{formatDate(post.date, currentLang)}</span>
+                        <span>{formatDate(post.publishDate)}</span> {/* Fixed here - only pass one argument */}
                       </div>
                       <div className="flex items-center gap-1.5">
                         <Clock size={14} />
-                        <span>{post.readTime} {content.minuteRead}</span>
+                        <span>{post.readTime || '5'} {content.minuteRead}</span>
                       </div>
                     </div>
                     
