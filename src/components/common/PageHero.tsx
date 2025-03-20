@@ -75,9 +75,13 @@ const PageHero = ({ badge, title, titleHighlight, description, buttons }: PageHe
           </ScrollReveal>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mt-6 mb-6">
-            <TextReveal text={typeof renderTitle() === 'string' ? renderTitle() : undefined}>
-              {typeof renderTitle() !== 'string' ? renderTitle() : null}
-            </TextReveal>
+            {titleHighlight ? (
+              <TextReveal>
+                {renderTitle()}
+              </TextReveal>
+            ) : (
+              <TextReveal text={title} />
+            )}
           </h1>
           
           <ScrollReveal delay={0.2}>

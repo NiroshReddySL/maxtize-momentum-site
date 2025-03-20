@@ -36,6 +36,12 @@ const TextReveal = ({
 
   // Use provided text or convert children to string
   const content = text || (typeof children === 'string' ? children : '');
+  
+  // If we don't have text content to animate, just return children as is
+  if (!content && children) {
+    return <>{children}</>;
+  }
+  
   const words = content.split(' ');
 
   const container = {
