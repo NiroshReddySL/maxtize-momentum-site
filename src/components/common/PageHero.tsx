@@ -74,13 +74,11 @@ const PageHero = ({ badge, title, titleHighlight, description, buttons }: PageHe
             </motion.span>
           </ScrollReveal>
           
-          <TextReveal
-            tag="h1"
-            // Fix the type error by properly typing the rendered title
-            text={renderTitle()}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mt-6 mb-6"
-            asChild={true} // Add this prop to allow React elements to be passed
-          />
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mt-6 mb-6">
+            <TextReveal asChild>
+              {renderTitle()}
+            </TextReveal>
+          </h1>
           
           <ScrollReveal delay={0.2}>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-10">

@@ -156,7 +156,7 @@ const BlogSection = () => {
         >
           {latestPosts.map((post, index) => (
             <motion.div 
-              key={post.id}
+              key={post.slug} // Using slug instead of id
               variants={itemVariants}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
@@ -187,11 +187,11 @@ const BlogSection = () => {
                     <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
                       <div className="flex items-center gap-1.5">
                         <CalendarDays size={14} />
-                        <span>{formatDate(post.publishDate)}</span> {/* Fixed here - only pass one argument */}
+                        <span>{formatDate(post.publishDate)}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <Clock size={14} />
-                        <span>{post.readTime || '5'} {content.minuteRead}</span>
+                        <span>5 {content.minuteRead}</span>
                       </div>
                     </div>
                     

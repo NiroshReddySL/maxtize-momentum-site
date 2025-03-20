@@ -1,4 +1,5 @@
 
+// No changes needed to AuthorType
 export interface AuthorType {
   id: string;
   name: string;
@@ -23,4 +24,5 @@ export interface BlogPostType {
   category: string;
   tags: string[];
   featured: boolean;
+  // We're using slug as the unique identifier instead of id
 }
