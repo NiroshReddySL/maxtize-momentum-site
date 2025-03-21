@@ -65,10 +65,6 @@
       fbq('init', 'XXXXXXXXXX');
       fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=XXXXXXXXXX&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Facebook Pixel Code -->
     
     <!-- LinkedIn Insight Tag -->
     <script type="text/javascript">
@@ -85,10 +81,6 @@
         s.parentNode.insertBefore(b, s);
       })(window.lintrk);
     </script>
-    <noscript>
-      <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=XXXXXXXXXX&fmt=gif" />
-    </noscript>
-    <!-- End LinkedIn Insight Tag -->
     
     <!-- Canonical Link -->
     <link rel="canonical" href="https://maxtize.com/" />
@@ -104,6 +96,16 @@
     <link rel="alternate" href="https://maxtize.com/" hreflang="x-default" />
   </head>
   <body>
+    <!-- Facebook Pixel Code noscript (moved from head to body) -->
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=XXXXXXXXXX&ev=PageView&noscript=1"
+    /></noscript>
+    
+    <!-- LinkedIn Insight Tag noscript (moved from head to body) -->
+    <noscript>
+      <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=XXXXXXXXXX&fmt=gif" />
+    </noscript>
+    
     <div id="root"></div>
     <!-- Lovable script tag for Select feature -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
