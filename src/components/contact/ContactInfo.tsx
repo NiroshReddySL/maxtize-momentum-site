@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { companyInfo } from '@/data/companyInfo';
 
 const ContactInfo = () => {
   return (
@@ -17,8 +18,8 @@ const ContactInfo = () => {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-1">Email Us</h3>
-            <p className="text-gray-600 dark:text-gray-300">info@maxtize.com</p>
-            <p className="text-gray-600 dark:text-gray-300">support@maxtize.com</p>
+            <p className="text-gray-600 dark:text-gray-300">{companyInfo.contact.email.general}</p>
+            <p className="text-gray-600 dark:text-gray-300">{companyInfo.contact.email.support}</p>
           </div>
         </div>
         
@@ -28,8 +29,8 @@ const ContactInfo = () => {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-1">Call Us</h3>
-            <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4567</p>
-            <p className="text-gray-600 dark:text-gray-300">+1 (555) 987-6543</p>
+            <p className="text-gray-600 dark:text-gray-300">{companyInfo.contact.phone.primary}</p>
+            <p className="text-gray-600 dark:text-gray-300">{companyInfo.contact.phone.secondary}</p>
           </div>
         </div>
         
@@ -40,9 +41,9 @@ const ContactInfo = () => {
           <div>
             <h3 className="text-lg font-semibold mb-1">Visit Us</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              123 Innovation Street<br />
-              Tech District<br />
-              San Francisco, CA 94103
+              {companyInfo.location.address}<br />
+              {companyInfo.location.city}, {companyInfo.location.state} {companyInfo.location.zipCode}<br />
+              {companyInfo.location.country}
             </p>
           </div>
         </div>
@@ -54,9 +55,9 @@ const ContactInfo = () => {
           <div>
             <h3 className="text-lg font-semibold mb-1">Business Hours</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              Monday - Friday: 9:00 AM - 6:00 PM<br />
-              Saturday: 10:00 AM - 2:00 PM<br />
-              Sunday: Closed
+              {companyInfo.hours.weekdays}<br />
+              {companyInfo.hours.saturday}<br />
+              {companyInfo.hours.sunday}
             </p>
           </div>
         </div>

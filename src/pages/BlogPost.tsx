@@ -9,6 +9,7 @@ import AuthorCard from '@/components/blog/AuthorCard';
 import CommentSection from '@/components/blog/CommentSection';
 import NewsletterSignup from '@/components/blog/NewsletterSignup';
 import ScrollProgress from '@/components/blog/ScrollProgress';
+import TableOfContents from '@/components/blog/TableOfContents';
 import SEO from '@/components/common/SEO';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
@@ -209,6 +210,10 @@ const BlogPost = () => {
               </div>
               
               <div className="lg:col-span-4">
+                <ScrollReveal>
+                  <TableOfContents />
+                </ScrollReveal>
+                
                 <ScrollReveal>
                   <NewsletterSignup />
                 </ScrollReveal>

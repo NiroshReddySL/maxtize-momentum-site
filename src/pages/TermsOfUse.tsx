@@ -6,8 +6,10 @@ import Footer from '@/components/layout/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SEO from '@/components/common/SEO';
 import ScrollReveal from '@/components/animations/ScrollReveal';
+import TableOfContents from '@/components/terms/TableOfContents';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { companyInfo } from '@/data/companyInfo';
 
 const TermsOfUse = () => {
   const { currentLang } = useLanguage();
@@ -20,41 +22,49 @@ const TermsOfUse = () => {
     en: {
       title: "Terms of Use",
       subtitle: "Please read these terms carefully before using our services",
-      updated: "Last Updated: June 15, 2024",
+      updated: `Last Updated: June 15, 2024`,
       contactText: "Have questions about our terms?",
       contactCta: "Contact our team",
       sections: [
         {
           title: "1. Acceptance of Terms",
-          content: "By accessing and using the services provided by Maxtize ('we', 'our', or 'the Company'), you agree to be bound by these Terms of Use, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing our services."
+          content: `By accessing and using the services provided by Maxtize ('we', 'our', or 'the Company'), you agree to be bound by these Terms of Use, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing our services.`
         },
         {
           title: "2. Use License",
-          content: "Permission is granted to temporarily access the materials on Maxtize's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not: modify or copy the materials; use the materials for any commercial purpose; attempt to decompile or reverse engineer any software contained on Maxtize's website; remove any copyright or other proprietary notations from the materials; or transfer the materials to another person or 'mirror' the materials on any other server."
+          content: `Permission is granted to temporarily access the materials on Maxtize's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not: modify or copy the materials; use the materials for any commercial purpose; attempt to decompile or reverse engineer any software contained on Maxtize's website; remove any copyright or other proprietary notations from the materials; or transfer the materials to another person or 'mirror' the materials on any other server.`
         },
         {
           title: "3. Disclaimer",
-          content: "The materials on Maxtize's website are provided on an 'as is' basis. Maxtize makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights."
+          content: `The materials on Maxtize's website are provided on an 'as is' basis. Maxtize makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.`
         },
         {
           title: "4. Limitations",
-          content: "In no event shall Maxtize or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Maxtize's website, even if Maxtize or a Maxtize authorized representative has been notified orally or in writing of the possibility of such damage."
+          content: `In no event shall Maxtize or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Maxtize's website, even if Maxtize or a Maxtize authorized representative has been notified orally or in writing of the possibility of such damage.`
         },
         {
           title: "5. Accuracy of Materials",
-          content: "The materials appearing on Maxtize's website could include technical, typographical, or photographic errors. Maxtize does not warrant that any of the materials on its website are accurate, complete or current. Maxtize may make changes to the materials contained on its website at any time without notice."
+          content: `The materials appearing on Maxtize's website could include technical, typographical, or photographic errors. Maxtize does not warrant that any of the materials on its website are accurate, complete or current. Maxtize may make changes to the materials contained on its website at any time without notice.`
         },
         {
           title: "6. Links",
-          content: "Maxtize has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by Maxtize of the site. Use of any such linked website is at the user's own risk."
+          content: `Maxtize has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by Maxtize of the site. Use of any such linked website is at the user's own risk.`
         },
         {
           title: "7. Modifications",
-          content: "Maxtize may revise these terms of service for its website at any time without notice. By using this website you are agreeing to be bound by the then current version of these terms of service."
+          content: `Maxtize may revise these terms of service for its website at any time without notice. By using this website you are agreeing to be bound by the then current version of these terms of service.`
         },
         {
           title: "8. Governing Law",
-          content: "These terms and conditions are governed by and construed in accordance with the laws of the United States and you irrevocably submit to the exclusive jurisdiction of the courts in that location."
+          content: `These terms and conditions are governed by and construed in accordance with the laws of India and you irrevocably submit to the exclusive jurisdiction of the courts in ${companyInfo.location.city}, ${companyInfo.location.state}.`
+        },
+        {
+          title: "9. Privacy",
+          content: `Your use of Maxtize's website is also subject to our Privacy Policy, which is incorporated into these Terms of Use by reference. Please review our Privacy Policy to understand our practices.`
+        },
+        {
+          title: "10. User Accounts",
+          content: `Some services offered on this website may require the creation of a user account. You are responsible for maintaining the confidentiality of your account information, including your password, and for all activity that occurs under your account. You agree to notify Maxtize immediately of any unauthorized use of your account or any other breach of security.`
         }
       ]
     },
@@ -110,17 +120,28 @@ const TermsOfUse = () => {
             </div>
           </ScrollReveal>
 
-          <div className="max-w-4xl mx-auto mb-20">
-            {content.sections.map((section, index) => (
-              <ScrollReveal key={index} delay={index * 0.05}>
-                <div className="mb-10">
-                  <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {section.content}
-                  </p>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 mb-10">
+            <TableOfContents sections={content.sections} />
+            
+            <ScrollReveal className="lg:col-span-3">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
+                <div className="prose prose-lg dark:prose-invert max-w-none">
+                  {content.sections.map((section, index) => (
+                    <motion.div
+                      key={index}
+                      id={`section-${index}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="mb-12"
+                    >
+                      <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
+                      <p>{section.content}</p>
+                    </motion.div>
+                  ))}
                 </div>
-              </ScrollReveal>
-            ))}
+              </div>
+            </ScrollReveal>
           </div>
 
           <ScrollReveal delay={0.4}>

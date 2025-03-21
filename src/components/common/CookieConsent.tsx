@@ -1,9 +1,46 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck, Info } from 'lucide-react';
+import { X, ShieldCheck, Info, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+
+declare global {
+  interface Window {
+    gtag: any;
+  }
+}
+
+// Google Consent Mode v2 implementation
+const updateConsentState = (preferences: Record<string, boolean>) => {
+  // Default denied state
+  let consentConfig = {
+    ad_storage: 'denied',
+    analytics_storage: 'denied',
+    functionality_storage: 'denied',
+    personalization_storage: 'denied',
+    security_storage: 'granted' // Always needed for security
+  };
+  
+  // Update based on user preferences
+  if (preferences.analytics) {
+    consentConfig.analytics_storage = 'granted';
+  }
+  
+  if (preferences.marketing) {
+    consentConfig.ad_storage = 'granted';
+    consentConfig.personalization_storage = 'granted';
+  }
+  
+  if (preferences.necessary || preferences.functionality) {
+    consentConfig.functionality_storage = 'granted';
+  }
+  
+  // Update Google's consent state
+  if (window.gtag) {
+    window.gtag('consent', 'update', consentConfig);
+  }
+};
 
 const CookieConsent = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -13,7 +50,27 @@ const CookieConsent = () => {
   useEffect(() => {
     // Check if user has already consented
     const hasConsented = localStorage.getItem('cookieConsent');
-    if (!hasConsented) {
+    if (hasConsented) {
+      // Apply saved preferences
+      try {
+        const savedPreferences = JSON.parse(hasConsented);
+        setCookiePreferences(savedPreferences);
+        updateConsentState(savedPreferences);
+      } catch (e) {
+        console.error('Error parsing saved consent:', e);
+      }
+    } else {
+      // Initialize Google Consent Mode with denied by default
+      if (window.gtag) {
+        window.gtag('consent', 'default', {
+          ad_storage: 'denied',
+          analytics_storage: 'denied',
+          functionality_storage: 'denied',
+          personalization_storage: 'denied',
+          security_storage: 'granted'
+        });
+      }
+      
       // Show the consent banner after a short delay
       const timer = setTimeout(() => {
         setIsVisible(true);
@@ -31,11 +88,16 @@ const CookieConsent = () => {
       acceptAll: "Accept All",
       acceptNecessary: "Accept Necessary",
       privacyLink: "Privacy Policy",
+      termsLink: "Terms of Use",
       categories: {
         necessary: {
           title: "Necessary",
           description: "Necessary cookies are essential for the website to function properly.",
           required: true
+        },
+        functionality: {
+          title: "Functionality",
+          description: "Functionality cookies enable the website to provide enhanced functionality and personalization."
         },
         analytics: {
           title: "Analytics",
@@ -46,7 +108,8 @@ const CookieConsent = () => {
           description: "Marketing cookies are used to track visitors across websites to display relevant advertisements."
         }
       },
-      details: "You can choose which cookies you want to accept. Your choices will be saved for one year."
+      details: "You can choose which cookies you want to accept. Your choices will be saved for one year.",
+      save: "Save Preferences"
     },
     de: {
       title: "Cookie-Zustimmung",
@@ -55,11 +118,16 @@ const CookieConsent = () => {
       acceptAll: "Alle akzeptieren",
       acceptNecessary: "Nur notwendige akzeptieren",
       privacyLink: "Datenschutzrichtlinie",
+      termsLink: "Nutzungsbedingungen",
       categories: {
         necessary: {
           title: "Notwendig",
           description: "Notwendige Cookies sind für das ordnungsgemäße Funktionieren der Website unerlässlich.",
           required: true
+        },
+        functionality: {
+          title: "Funktionalität",
+          description: "Funktionalitäts-Cookies ermöglichen der Website, erweiterte Funktionalität und Personalisierung bereitzustellen."
         },
         analytics: {
           title: "Analyse",
@@ -70,7 +138,8 @@ const CookieConsent = () => {
           description: "Marketing-Cookies werden verwendet, um Besucher über Websites hinweg zu verfolgen, um relevante Werbung anzuzeigen."
         }
       },
-      details: "Sie können wählen, welche Cookies Sie akzeptieren möchten. Ihre Auswahl wird für ein Jahr gespeichert."
+      details: "Sie können wählen, welche Cookies Sie akzeptieren möchten. Ihre Auswahl wird für ein Jahr gespeichert.",
+      save: "Einstellungen speichern"
     }
     // Add other languages as needed
   };
@@ -79,35 +148,46 @@ const CookieConsent = () => {
   
   const [cookiePreferences, setCookiePreferences] = useState({
     necessary: true, // Always required
+    functionality: false,
     analytics: false,
     marketing: false
   });
   
   const handleAcceptAll = () => {
-    setCookiePreferences({
+    const newPreferences = {
       necessary: true,
+      functionality: true,
       analytics: true,
       marketing: true
-    });
+    };
+    
+    setCookiePreferences(newPreferences);
     
     localStorage.setItem('cookieConsent', JSON.stringify({
-      necessary: true,
-      analytics: true,
-      marketing: true,
+      ...newPreferences,
       timestamp: new Date().toISOString()
     }));
     
+    updateConsentState(newPreferences);
     setIsVisible(false);
   };
   
   const handleAcceptNecessary = () => {
-    localStorage.setItem('cookieConsent', JSON.stringify({
+    const newPreferences = {
       necessary: true,
+      functionality: false,
       analytics: false,
-      marketing: false,
+      marketing: false
+    };
+    
+    setCookiePreferences(newPreferences);
+    
+    localStorage.setItem('cookieConsent', JSON.stringify({
+      ...newPreferences,
       timestamp: new Date().toISOString()
     }));
     
+    updateConsentState(newPreferences);
     setIsVisible(false);
   };
   
@@ -117,17 +197,37 @@ const CookieConsent = () => {
       timestamp: new Date().toISOString()
     }));
     
+    updateConsentState(cookiePreferences);
     setIsVisible(false);
   };
   
   const handleTogglePreference = (category: string) => {
     if (category === 'necessary') return; // Cannot toggle necessary cookies
     
-    setCookiePreferences(prev => ({
-      ...prev,
-      [category]: !prev[category as keyof typeof prev]
-    }));
+    setCookiePreferences(prev => {
+      const updated = {
+        ...prev,
+        [category]: !prev[category as keyof typeof prev]
+      };
+      
+      return updated;
+    });
   };
+
+  // Add a function to show the consent dialog when called from footer
+  const showConsentManager = () => {
+    setIsVisible(true);
+    setExpanded(true);
+  };
+
+  // Expose the function to the window object
+  useEffect(() => {
+    (window as any).showCookieConsentManager = showConsentManager;
+    
+    return () => {
+      delete (window as any).showCookieConsentManager;
+    };
+  }, []);
 
   return (
     <AnimatePresence>
@@ -143,6 +243,7 @@ const CookieConsent = () => {
             <button 
               onClick={() => setIsVisible(false)}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              aria-label="Close"
             >
               <X size={18} />
             </button>
@@ -206,7 +307,7 @@ const CookieConsent = () => {
                       onClick={handleSavePreferences}
                       className="w-full py-2 px-4 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors"
                     >
-                      Save Preferences
+                      {content.save}
                     </button>
                   </div>
                 </motion.div>
@@ -241,9 +342,12 @@ const CookieConsent = () => {
               </button>
             </div>
             
-            <div className="mt-3 text-center text-xs text-gray-500 dark:text-gray-400">
+            <div className="mt-3 text-center text-xs text-gray-500 dark:text-gray-400 flex justify-center gap-4">
               <Link to="/privacy-policy" className="underline hover:text-orange-500 dark:hover:text-orange-400">
                 {content.privacyLink}
+              </Link>
+              <Link to="/terms-of-use" className="underline hover:text-orange-500 dark:hover:text-orange-400">
+                {content.termsLink}
               </Link>
             </div>
           </div>

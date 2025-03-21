@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react';
+
+import { useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SEO from '@/components/common/SEO';
-import HeroSection from '@/components/faqs/HeroSection';
-import CategorySelector from '@/components/faqs/CategorySelector';
-import FAQCategory from '@/components/faqs/FAQCategory';
-import ContactCTA from '@/components/faqs/ContactCTA';
-
-interface FAQItem {
-  q: string;
-  a: string;
-}
+import FAQsHeader from '@/components/faqs/FAQsHeader';
+import FAQsContainer from '@/components/faqs/FAQsContainer';
+import FAQSchema from '@/components/faqs/FAQSchema';
+import { companyInfo } from '@/data/companyInfo';
 
 const FAQs = () => {
   const { currentLang } = useLanguage();
-  const [activeCategory, setActiveCategory] = useState("general");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -45,7 +40,7 @@ const FAQs = () => {
           },
           {
             q: "Do you work with clients internationally?",
-            a: "Yes, we work with clients globally. Our team is experienced in collaborating remotely, and we've successfully delivered projects for clients across North America, Europe, Asia, and Australia. We use efficient communication and project management tools to ensure smooth collaboration regardless of geographic location."
+            a: `Yes, we work with clients globally. Based in ${companyInfo.location.city}, ${companyInfo.location.country}, our team is experienced in collaborating remotely, and we've successfully delivered projects for clients across North America, Europe, Asia, and Australia. We use efficient communication and project management tools to ensure smooth collaboration regardless of geographic location.`
           }
         ],
         services: [
@@ -69,21 +64,21 @@ const FAQs = () => {
           },
           {
             q: "Do you require a minimum budget or contract length?",
-            a: "While we don't have strict minimum requirements, most of our clients invest at least $5,000 for small projects and $15,000+ for comprehensive digital solutions. For maintenance and ongoing services, we typically recommend minimum 3-month engagements to achieve meaningful results. We're happy to discuss your budget constraints and find a solution that works for you."
+            a: "While we don't have strict minimum requirements, most of our clients invest at least ₹4,00,000 for small projects and ₹12,00,000+ for comprehensive digital solutions. For maintenance and ongoing services, we typically recommend minimum 3-month engagements to achieve meaningful results. We're happy to discuss your budget constraints and find a solution that works for you."
           },
           {
             q: "What payment methods do you accept?",
-            a: "We accept multiple payment methods including credit cards, bank transfers, and digital payment platforms. For large projects, we typically structure payments in milestones: an initial deposit, progress payments at key delivery points, and a final payment upon project completion."
+            a: "We accept multiple payment methods including credit cards, bank transfers, UPI, and digital payment platforms. For large projects, we typically structure payments in milestones: an initial deposit, progress payments at key delivery points, and a final payment upon project completion."
           }
         ],
         support: [
           {
             q: "How can I get support if I encounter issues?",
-            a: "We provide multiple support channels for our clients. Depending on your service agreement, you can reach our support team via email, phone, or through our dedicated client portal. For urgent matters, we offer emergency support with guaranteed response times based on your service level agreement."
+            a: `We provide multiple support channels for our clients. Depending on your service agreement, you can reach our support team via email at ${companyInfo.contact.email.support}, phone at ${companyInfo.contact.phone.primary}, or through our dedicated client portal. For urgent matters, we offer emergency support with guaranteed response times based on your service level agreement.`
           },
           {
             q: "What are your standard support hours?",
-            a: "Our standard support hours are Monday through Friday, 9am to 6pm Eastern Time. For clients with premium support packages, we offer extended hours and weekend support. Emergency support for critical issues is available 24/7 for clients with appropriate service level agreements."
+            a: `Our standard support hours are Monday through Friday, 9am to 6pm IST. For clients with premium support packages, we offer extended hours and weekend support. Emergency support for critical issues is available 24/7 for clients with appropriate service level agreements.`
           },
           {
             q: "Do you provide training for my team?",
@@ -127,28 +122,6 @@ const FAQs = () => {
 
   const content = faqTranslations[currentLang as keyof typeof faqTranslations] || faqTranslations.en;
 
-  const generateFAQSchema = () => {
-    const allFaqs: FAQItem[] = [];
-    Object.values(content.faqs).forEach((categoryFaqs: any) => {
-      allFaqs.push(...categoryFaqs);
-    });
-
-    const schema = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": allFaqs.map(faq => ({
-        "@type": "Question",
-        "name": faq.q,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": faq.a
-        }
-      }))
-    };
-
-    return JSON.stringify(schema);
-  };
-
   return (
     <div className="min-h-screen">
       <SEO 
@@ -158,30 +131,16 @@ const FAQs = () => {
       <Navbar />
       <main className="pt-32 pb-20">
         <div className="container-custom">
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: generateFAQSchema() }}
-          />
+          <FAQSchema faqs={content.faqs} />
           
-          <HeroSection 
+          <FAQsHeader 
             title={content.title} 
             subtitle={content.subtitle} 
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 mb-20">
-            <CategorySelector 
-              categories={content.categories}
-              activeCategory={activeCategory}
-              onCategoryChange={setActiveCategory}
-            />
-
-            <FAQCategory 
-              title={content.categories.find(c => c.id === activeCategory)?.label || ''}
-              faqs={content.faqs[activeCategory as keyof typeof content.faqs] || []}
-            />
-          </div>
-
-          <ContactCTA 
+          <FAQsContainer 
+            categories={content.categories}
+            faqs={content.faqs}
             contactText={content.contactText}
             contactCta={content.contactCta}
           />
