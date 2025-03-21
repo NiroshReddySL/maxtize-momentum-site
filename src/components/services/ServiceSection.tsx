@@ -4,14 +4,15 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LazyImage from '@/components/common/LazyImage';
 import ScrollReveal from '@/components/animations/ScrollReveal';
+import { generateServicePlaceholder } from '@/utils/servicePlaceholder';
 
 interface ServiceSectionProps {
   section: {
     id: string;
     title: string;
     content: React.ReactNode;
-    image: string;
-    imageAlt: string;
+    image?: string; // Make image optional to match ServiceContentSection
+    imageAlt?: string; // Make imageAlt optional to match ServiceContentSection
     flipped?: boolean;
     translations?: Record<string, {
       title: string;
@@ -19,6 +20,7 @@ interface ServiceSectionProps {
       imageAlt?: string;
     }>;
     className?: string;
+    serviceId?: string; // Add serviceId to generate placeholders
   };
 }
 
@@ -44,7 +46,15 @@ const ServiceSection = ({ section }: ServiceSectionProps) => {
     if (section.translations && section.translations[currentLang]?.imageAlt) {
       return section.translations[currentLang].imageAlt;
     }
-    return section.imageAlt;
+    return section.imageAlt || "Service illustration";
+  };
+
+  // Generate placeholder image if image is not provided
+  const getImage = () => {
+    if (section.image) return section.image;
+    return section.serviceId 
+      ? generateServicePlaceholder(section.serviceId, 'section') 
+      : '/images/services/placeholder-service.jpg';
   };
 
   return (
@@ -57,7 +67,7 @@ const ServiceSection = ({ section }: ServiceSectionProps) => {
             transition={{ duration: 0.3 }}
           >
             <LazyImage 
-              src={section.image}
+              src={getImage()}
               alt={getTranslatedImageAlt()}
               className="w-full h-full max-h-[500px] object-cover shadow-lg rounded-xl"
               placeholder="/images/services/placeholder-service.jpg"

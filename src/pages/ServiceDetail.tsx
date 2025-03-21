@@ -41,7 +41,13 @@ const ServiceDetail = () => {
       <ServiceLayout service={service} openContactForm={handleOpenContactForm}>
         {/* Service content sections */}
         {serviceContent.sections.map((section) => (
-          <ServiceSection key={section.id} section={section} />
+          <ServiceSection 
+            key={section.id} 
+            section={{
+              ...section,
+              serviceId: service.id // Pass serviceId to generate proper placeholders
+            }} 
+          />
         ))}
         
         {/* Testimonials */}

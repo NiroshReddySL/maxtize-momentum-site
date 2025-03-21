@@ -1,5 +1,4 @@
-
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTheme } from 'next-themes';
@@ -22,10 +21,9 @@ const Index = () => {
   const { setTheme, theme, systemTheme } = useTheme();
   const { shouldAnimate } = useAnimation();
   
-  // Use optimized animation settings for better performance
+  const scrollRef = useRef(null);
   const { scrollYProgress } = useScroll({
-    // More efficient scroll tracking with higher refresh rate
-    container: document.documentElement,
+    container: scrollRef,
   });
   
   const backgroundOpacity = useTransform(
@@ -35,7 +33,6 @@ const Index = () => {
     { clamp: true } // Prevent overshooting
   );
   
-  // Handle system theme preference
   useEffect(() => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
@@ -60,7 +57,6 @@ const Index = () => {
     console.log("Index page mounted with language:", lang || currentLang);
     document.title = "Maxtize - Digital Excellence for Growing Businesses";
     
-    // Improve performance by disabling complex animations on low-end devices
     const isLowEndDevice = () => {
       return !window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
     };
@@ -69,7 +65,6 @@ const Index = () => {
       document.body.classList.add('reduced-motion');
     }
     
-    // Add will-change to optimize animation performance
     const mainElement = document.querySelector('main');
     if (mainElement) {
       mainElement.style.willChange = 'opacity';
@@ -79,7 +74,6 @@ const Index = () => {
     }
   }, [lang, currentLang]);
 
-  // Define hreflang links for international SEO
   const hrefLangs = [
     { lang: 'en', href: `${window.location.origin}/` },
     { lang: 'en-GB', href: `${window.location.origin}/en-gb/` },
@@ -92,7 +86,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950" ref={scrollRef}>
       <SEO 
         title="Maxtize - Digital Excellence for Growing Businesses"
         description="We're a young, dynamic team specializing in digital marketing, SEO, and full-stack development. No challenge is too complex for us."
