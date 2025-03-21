@@ -10,6 +10,6 @@ export interface CookiePreferences {
 declare global {
   interface Window {
     showCookieConsentManager?: () => void;
-    gtag?: any; // Changed from gtag?: any to match the declaration in CookieConsent.tsx
+    gtag: any; // Changed from optional to required to match other declarations
   }
 }
