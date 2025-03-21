@@ -4,13 +4,18 @@ import { Send } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { submitToHubSpot } from '@/utils/hubspot';
 
-const ContactForm = () => {
+interface ContactFormProps {
+  onSuccess?: () => void;
+  purpose?: string;
+}
+
+const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    subject: purpose || '',
     message: ''
   });
 
@@ -46,6 +51,11 @@ const ContactForm = () => {
           subject: '',
           message: ''
         });
+        
+        // Call onSuccess callback if provided
+        if (onSuccess) {
+          onSuccess();
+        }
       } else {
         toast({
           title: "Submission Failed",

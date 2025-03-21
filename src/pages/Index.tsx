@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -21,10 +20,7 @@ const Index = () => {
   const { currentLang } = useLanguage();
   const { setTheme, theme, systemTheme } = useTheme();
   const { shouldAnimate } = useAnimation();
-  const { scrollYProgress } = useScroll({
-    // Smoother scrolling by using GPU acceleration
-    smooth: 0.1, 
-  });
+  const { scrollYProgress } = useScroll();
   
   const backgroundOpacity = useTransform(
     scrollYProgress,
