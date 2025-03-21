@@ -1,5 +1,6 @@
+
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Index from './pages/Index';
 import About from './pages/About';
 import Services from './pages/Services';
@@ -28,7 +29,7 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <Router>
+    <>
       <ScrollToTop />
       <CookieConsent />
       <Routes>
@@ -47,7 +48,7 @@ function App() {
         <Route path="/terms-of-use" element={<TermsOfUse />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
