@@ -5,11 +5,12 @@ export interface CookiePreferences {
   analytics: boolean;
   marketing: boolean;
   timestamp?: string;
+  [key: string]: boolean | string | undefined;
 }
 
 declare global {
   interface Window {
     showCookieConsentManager?: () => void;
-    gtag?: any; // Changed back to optional to ensure consistent modifiers across all declarations
+    gtag?: any;
   }
 }

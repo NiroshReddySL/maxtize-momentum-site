@@ -2,7 +2,7 @@
 import { CookiePreferences } from '@/types/cookie';
 
 // Google Consent Mode v2 implementation
-export const updateConsentState = (preferences: Record<string, boolean>) => {
+export const updateConsentState = (preferences: CookiePreferences) => {
   // Default denied state
   let consentConfig = {
     ad_storage: 'denied',

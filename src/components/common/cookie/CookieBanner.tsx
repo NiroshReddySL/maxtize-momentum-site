@@ -83,7 +83,7 @@ const CookieBanner = ({
                       <input
                         type="checkbox"
                         id={`cookie-${key}`}
-                        checked={key === 'necessary' ? true : preferences[key as keyof CookiePreferences]}
+                        checked={key === 'necessary' ? true : Boolean(preferences[key as keyof CookiePreferences])}
                         onChange={() => handleTogglePreference(key)}
                         disabled={key === 'necessary'}
                         className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500 cursor-pointer"
