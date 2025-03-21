@@ -17,6 +17,7 @@ import NotFound from './pages/NotFound';
 import CookieConsent from './components/common/CookieConsent';
 import TermsOfUse from './pages/TermsOfUse';
 import ThankYou from './pages/ThankYou';
+import AccessibilityWidget from './components/accessibility/AccessibilityWidget';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -33,6 +34,7 @@ function App() {
     <>
       <ScrollToTop />
       <CookieConsent />
+      <AccessibilityWidget />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/about" element={<About />} />

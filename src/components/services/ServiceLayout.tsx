@@ -73,7 +73,7 @@ const ServiceLayout = ({ service, children, openContactForm }: ServiceLayoutProp
         {/* Hero Section */}
         <section className="pt-32 pb-20 relative overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50 z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>
             <img 
               src={getServiceHeroImage()} 
               alt={getTranslatedTitle()}
@@ -82,6 +82,12 @@ const ServiceLayout = ({ service, children, openContactForm }: ServiceLayoutProp
                 (e.target as HTMLImageElement).src = '/images/services/placeholder-service.jpg';
               }}
             />
+            
+            {/* Decorative elements */}
+            <div className="absolute top-0 left-0 w-full h-full z-0 opacity-20">
+              <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-orange-500/20 filter blur-3xl"></div>
+              <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-purple-500/20 filter blur-3xl"></div>
+            </div>
           </div>
           
           <div className="container-custom relative z-10">
@@ -89,6 +95,7 @@ const ServiceLayout = ({ service, children, openContactForm }: ServiceLayoutProp
               <Link 
                 to="/services" 
                 className="inline-flex items-center text-white/90 hover:text-white mb-6 transition-colors"
+                aria-label="Back to services page"
               >
                 <ArrowLeft size={16} className="mr-2" />
                 {backToServices}
@@ -103,7 +110,7 @@ const ServiceLayout = ({ service, children, openContactForm }: ServiceLayoutProp
                   transition={{ duration: 0.5 }}
                   className="text-white"
                 >
-                  <div className="w-20 h-20 flex items-center justify-center bg-orange-500/20 backdrop-blur-sm text-orange-400 rounded-xl mb-6 border border-orange-500/30">
+                  <div className="w-20 h-20 flex items-center justify-center bg-gradient-to-br from-orange-500/30 to-orange-600/30 backdrop-blur-sm text-orange-400 rounded-xl mb-6 border border-orange-500/30 shadow-lg">
                     {service.icon}
                   </div>
                   <h1 className="text-4xl md:text-5xl font-bold mb-6">
@@ -115,7 +122,8 @@ const ServiceLayout = ({ service, children, openContactForm }: ServiceLayoutProp
                   
                   <button 
                     onClick={openContactForm} 
-                    className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:outline-none"
+                    aria-label={`Request ${getTranslatedTitle()} service`}
                   >
                     {ctaText}
                     <ArrowRight size={16} className="ml-2" />
@@ -131,7 +139,7 @@ const ServiceLayout = ({ service, children, openContactForm }: ServiceLayoutProp
                      currentLang === 'zh' ? '主要特点' : 
                      currentLang === 'hi' ? 'प्रमुख विशेषताएं' : 'Key Features'}
                   </h3>
-                  <ul className="space-y-4">
+                  <ul className="space-y-4" aria-label="Service features">
                     {getTranslatedFeatures().map((feature, idx) => (
                       <motion.li 
                         key={idx} 
@@ -140,7 +148,7 @@ const ServiceLayout = ({ service, children, openContactForm }: ServiceLayoutProp
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 + (idx * 0.1) }}
                       >
-                        <CheckCircle size={18} className="text-orange-400 mt-1 mr-3 flex-shrink-0" />
+                        <CheckCircle size={18} className="text-orange-400 mt-1 mr-3 flex-shrink-0" aria-hidden="true" />
                         <span className="text-white/90">{feature}</span>
                       </motion.li>
                     ))}

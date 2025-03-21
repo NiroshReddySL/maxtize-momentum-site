@@ -11,6 +11,7 @@ import RelatedServices from '@/components/services/RelatedServices';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import ContactForm from '@/components/contact/ContactForm';
 import { X } from 'lucide-react';
+import ServiceVisualizer from '@/components/services/ServiceVisualizer';
 
 const ServiceDetail = () => {
   const { id, lang } = useParams<{ id: string; lang?: string }>();
@@ -39,6 +40,11 @@ const ServiceDetail = () => {
   return (
     <>
       <ServiceLayout service={service} openContactForm={handleOpenContactForm}>
+        {/* 3D Visualizer */}
+        <div className="mb-24">
+          <ServiceVisualizer serviceId={service.id} />
+        </div>
+        
         {/* Service content sections */}
         {serviceContent.sections.map((section) => (
           <ServiceSection 
@@ -71,7 +77,7 @@ const ServiceDetail = () => {
 
       {/* Contact Form Dialog */}
       <Dialog open={showContactForm} onOpenChange={setShowContactForm}>
-        <DialogContent className="max-w-md sm:max-w-[500px] p-0 overflow-hidden max-h-[90vh] sm:max-h-[auto] overflow-y-auto rounded-lg">
+        <DialogContent className="max-w-md sm:max-w-[500px] p-0 overflow-hidden max-h-[90vh] overflow-y-auto rounded-lg">
           <div className="sticky top-0 z-10 bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white">
             <h2 className="text-xl font-semibold mb-1">Request {service.title}</h2>
             <p className="text-sm text-white/80">
@@ -88,6 +94,10 @@ const ServiceDetail = () => {
           <div className="p-6">
             <ContactForm 
               purpose={service.title}
+              onSuccess={() => {
+                setShowContactForm(false);
+                window.location.href = `/thank-you?service=${encodeURIComponent(service.id)}`;
+              }}
             />
           </div>
         </DialogContent>

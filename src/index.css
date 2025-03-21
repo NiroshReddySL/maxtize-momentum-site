@@ -139,3 +139,53 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
+
+/* Accessibility styles */
+.high-contrast {
+  filter: contrast(1.4);
+}
+
+.high-contrast .bg-white {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+.high-contrast .text-gray-600,
+.high-contrast .text-gray-700 {
+  color: #fff !important;
+}
+
+.high-contrast a:not(.btn-primary):not(.btn-outline) {
+  color: #ffdd00 !important;
+  text-decoration: underline;
+}
+
+.high-contrast .btn-primary,
+.high-contrast .btn-outline:hover {
+  background-color: #ffdd00 !important;
+  color: #000 !important;
+  border-color: #ffdd00 !important;
+}
+
+/* Reduce motion */
+.reduced-motion * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Focus states for accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Skip to content link for keyboard users */
+.skip-to-content {
+  @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-500 focus:text-white focus:rounded;
+}

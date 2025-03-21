@@ -1,59 +1,66 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import LanguageSelector from './LanguageSelector';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from '../theme/ThemeToggle';
+import { services } from '@/data/services';
 
 const MobileNav = () => {
   const location = useLocation();
-  const { currentLang, translate } = useLanguage();
+  const { currentLang } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const [servicesExpanded, setServicesExpanded] = useState(false);
+  const [resourcesExpanded, setResourcesExpanded] = useState(false);
 
   const menuItems = [
-    { path: '/', label: 'Home' },
-    { path: '/services', label: 'Services' },
-    { path: '/projects', label: 'Projects' },
-    { path: '/blog', label: 'Blog' },
     { path: '/about', label: 'About' },
+    { path: '/pricing', label: 'Pricing' },
     { path: '/contact', label: 'Contact' },
     { path: '/faqs', label: 'FAQs' },
-    { path: '/privacy-policy', label: 'Privacy Policy' },
-    { path: '/pricing', label: 'Pricing' }
+    { path: '/privacy-policy', label: 'Privacy Policy' }
   ];
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname === `/${currentLang}${path}`;
   };
 
+  const isServiceActive = (id: string) => {
+    return location.pathname === `/services/${id}`;
+  };
+
   const closeMenu = () => setIsOpen(false);
 
   const menuTranslations = {
     en: {
-      home: "Home",
       services: "Services",
+      resources: "Resources",
       projects: "Projects",
       blog: "Blog",
       about: "About",
       contact: "Contact",
       faqs: "FAQs",
       privacy: "Privacy Policy",
-      pricing: "Pricing"
+      pricing: "Pricing",
+      allServices: "All Services"
     },
     de: {
-      home: "Startseite",
       services: "Dienstleistungen",
+      resources: "Ressourcen",
       projects: "Projekte",
       blog: "Blog",
       about: "Über uns",
       contact: "Kontakt",
       faqs: "Häufige Fragen",
       privacy: "Datenschutzerklärung",
-      pricing: "Preise"
+      pricing: "Preise",
+      allServices: "Alle Dienstleistungen"
     }
   };
+
+  const labels = menuTranslations[currentLang as keyof typeof menuTranslations] || menuTranslations.en;
 
   return (
     <div className="md:hidden flex items-center space-x-3">
@@ -69,7 +76,7 @@ const MobileNav = () => {
             <Menu size={24} />
           </button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-full sm:w-[350px] p-0">
+        <SheetContent side="right" className="w-full sm:w-[350px] p-0 max-h-screen overflow-y-auto">
           <div className="h-full flex flex-col bg-background">
             <div className="flex items-center justify-between p-4 border-b">
               <span className="text-lg font-semibold">Menu</span>
@@ -89,6 +96,117 @@ const MobileNav = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
                 >
+                  {/* Services Dropdown */}
+                  <div className="mb-2">
+                    <button
+                      onClick={() => setServicesExpanded(!servicesExpanded)}
+                      className={`flex items-center justify-between w-full px-4 py-3 rounded-md transition-colors ${
+                        location.pathname.includes('/services')
+                          ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
+                          : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      <span>{labels.services}</span>
+                      <ChevronDown 
+                        size={18} 
+                        className={`transition-transform ${servicesExpanded ? 'rotate-180' : ''}`} 
+                      />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {servicesExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden ml-4"
+                        >
+                          <Link
+                            to="/services"
+                            className={`flex items-center w-full px-4 py-3 rounded-md transition-colors ${
+                              isActive('/services') && !location.pathname.includes('/services/')
+                                ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
+                                : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                            }`}
+                            onClick={closeMenu}
+                          >
+                            {labels.allServices}
+                          </Link>
+                          
+                          {services.map((service) => (
+                            <Link
+                              key={service.id}
+                              to={`/services/${service.id}`}
+                              className={`flex items-center w-full px-4 py-3 rounded-md transition-colors ${
+                                isServiceActive(service.id)
+                                  ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
+                                  : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                              }`}
+                              onClick={closeMenu}
+                            >
+                              <span className="mr-2 text-orange-500">{service.icon}</span>
+                              {service.translations?.[currentLang]?.title || service.title}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  
+                  {/* Resources Dropdown */}
+                  <div className="mb-2">
+                    <button
+                      onClick={() => setResourcesExpanded(!resourcesExpanded)}
+                      className={`flex items-center justify-between w-full px-4 py-3 rounded-md transition-colors ${
+                        (isActive('/projects') || isActive('/blog'))
+                          ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
+                          : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      <span>{labels.resources}</span>
+                      <ChevronDown 
+                        size={18} 
+                        className={`transition-transform ${resourcesExpanded ? 'rotate-180' : ''}`} 
+                      />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {resourcesExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden ml-4"
+                        >
+                          <Link
+                            to="/projects"
+                            className={`flex items-center w-full px-4 py-3 rounded-md transition-colors ${
+                              isActive('/projects')
+                                ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
+                                : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                            }`}
+                            onClick={closeMenu}
+                          >
+                            {labels.projects}
+                          </Link>
+                          
+                          <Link
+                            to="/blog"
+                            className={`flex items-center w-full px-4 py-3 rounded-md transition-colors ${
+                              isActive('/blog')
+                                ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
+                                : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                            }`}
+                            onClick={closeMenu}
+                          >
+                            {labels.blog}
+                          </Link>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Other menu items */}
                   {menuItems.map((item, index) => (
                     <motion.div
                       key={item.path}
@@ -105,7 +223,7 @@ const MobileNav = () => {
                         }`}
                         onClick={closeMenu}
                       >
-                        {menuTranslations[currentLang as keyof typeof menuTranslations]?.[item.label.toLowerCase() as keyof typeof menuTranslations['en']] || item.label}
+                        {labels[item.label.toLowerCase() as keyof typeof labels] || item.label}
                       </Link>
                     </motion.div>
                   ))}
