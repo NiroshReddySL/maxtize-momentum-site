@@ -1,15 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShieldCheck, Info, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-
-declare global {
-  interface Window {
-    gtag: any;
-  }
-}
 
 // Google Consent Mode v2 implementation
 const updateConsentState = (preferences: Record<string, boolean>) => {
