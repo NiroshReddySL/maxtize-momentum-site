@@ -14,17 +14,23 @@ import Footer from '@/components/layout/Footer';
 import SEO from '@/components/common/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Toaster } from 'sonner';
+import { useAnimation } from '@/contexts/AnimationContext';
 
 const Index = () => {
   const { lang } = useParams<{ lang?: string }>();
   const { currentLang } = useLanguage();
   const { setTheme, theme, systemTheme } = useTheme();
-  const { scrollYProgress } = useScroll();
+  const { shouldAnimate } = useAnimation();
+  const { scrollYProgress } = useScroll({
+    // Smoother scrolling by using GPU acceleration
+    smooth: 0.1, 
+  });
   
   const backgroundOpacity = useTransform(
     scrollYProgress,
     [0, 0.5],
-    [1, 0.9]
+    [1, 0.95],
+    { clamp: true } // Prevent overshooting
   );
   
   // Handle system theme preference
@@ -51,6 +57,15 @@ const Index = () => {
     window.scrollTo(0, 0);
     console.log("Index page mounted with language:", lang || currentLang);
     document.title = "Maxtize - Digital Excellence for Growing Businesses";
+    
+    // Improve performance by disabling complex animations on low-end devices
+    const isLowEndDevice = () => {
+      return !window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    };
+    
+    if (isLowEndDevice()) {
+      document.body.classList.add('reduced-motion');
+    }
   }, [lang, currentLang]);
 
   // Define hreflang links for international SEO
@@ -77,7 +92,12 @@ const Index = () => {
       <Navbar />
       <Toaster position="top-right" />
       
-      <motion.main style={{ opacity: backgroundOpacity }}>
+      <motion.main 
+        style={{ opacity: shouldAnimate ? backgroundOpacity : 1 }}
+        initial={shouldAnimate ? { opacity: 0 } : false}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
         <div className="absolute inset-0 z-0 overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-br from-orange-200/30 to-pink-300/30 dark:from-orange-900/20 dark:to-pink-900/20 rounded-full filter blur-[100px] transform translate-x-1/4 -translate-y-1/4"></div>
           <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-blue-200/30 to-purple-300/30 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full filter blur-[100px] transform -translate-x-1/4 translate-y-1/4"></div>

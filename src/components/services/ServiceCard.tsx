@@ -5,12 +5,14 @@ import { ArrowRight } from 'lucide-react';
 import { ServiceType } from '@/types/service';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
+import LazyImage from '@/components/common/LazyImage';
 
 interface ServiceCardProps {
   service: ServiceType;
+  openContactForm: () => void;
 }
 
-const ServiceCard = ({ service }: ServiceCardProps) => {
+const ServiceCard = ({ service, openContactForm }: ServiceCardProps) => {
   const { currentLang } = useLanguage();
 
   // Get translated content based on current language
@@ -49,50 +51,65 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
                             currentLang === 'kn' ? 'ಸೇವೆ ವಿನಂತಿಸಿ' : 
                             currentLang === 'te' ? 'సేవ అభ్యర్థించండి' : 'Request Service';
 
+  // Image path based on service ID
+  const imagePath = `/images/services/${service.id}-card.jpg`;
+  const fallbackImage = `/images/services/placeholder-service.jpg`;
+
   return (
     <motion.div 
       id={service.id} 
-      className="glass-card p-8 hover-card-effect"
+      className="glass-card overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg transition-all duration-300"
       whileHover={{ y: -5 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <div className="w-16 h-16 flex items-center justify-center bg-orange-100 dark:bg-orange-900/30 text-orange-500 rounded-lg mb-6">
-        {service.icon}
+      <div className="h-48 overflow-hidden">
+        <LazyImage 
+          src={imagePath} 
+          alt={getTranslatedTitle()}
+          className="w-full h-full object-cover"
+          placeholder={fallbackImage}
+        />
       </div>
       
-      <h2 className="text-2xl font-bold mb-4">{getTranslatedTitle()}</h2>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        {getTranslatedDescription()}
-      </p>
-      
-      <ul className="space-y-3 mb-8">
-        {getTranslatedFeatures().slice(0, 3).map((feature, idx) => (
-          <li key={idx} className="flex items-center">
-            <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0 mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-            <span className="text-gray-700 dark:text-gray-200">{feature}</span>
-          </li>
-        ))}
-      </ul>
-      
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-        <Link 
-          to={`/services/${service.id}`}
-          className="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium transition-colors"
-        >
-          {learnMoreText}
-          <ArrowRight size={16} className="ml-2" />
-        </Link>
+      <div className="p-6">
+        <div className="w-16 h-16 flex items-center justify-center bg-orange-100 dark:bg-orange-900/30 text-orange-500 rounded-lg mb-6">
+          {service.icon}
+        </div>
         
-        <Link 
-          to="/contact" 
-          className="inline-flex items-center justify-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
-        >
-          {requestServiceText}
-        </Link>
+        <h2 className="text-2xl font-bold mb-4">{getTranslatedTitle()}</h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-6">
+          {getTranslatedDescription()}
+        </p>
+        
+        <ul className="space-y-3 mb-8">
+          {getTranslatedFeatures().slice(0, 3).map((feature, idx) => (
+            <li key={idx} className="flex items-center">
+              <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0 mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <span className="text-gray-700 dark:text-gray-200">{feature}</span>
+            </li>
+          ))}
+        </ul>
+        
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <Link 
+            to={`/services/${service.id}`}
+            className="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium transition-colors"
+          >
+            {learnMoreText}
+            <ArrowRight size={16} className="ml-2" />
+          </Link>
+          
+          <button 
+            onClick={openContactForm}
+            className="inline-flex items-center justify-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+          >
+            {requestServiceText}
+          </button>
+        </div>
       </div>
     </motion.div>
   );

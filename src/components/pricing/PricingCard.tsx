@@ -95,12 +95,14 @@ const PricingCard = ({
                   {feature.name}
                   {feature.tooltip && (
                     <TooltipProvider>
-                      <Tooltip>
+                      <Tooltip delayDuration={100}>
                         <TooltipTrigger asChild>
-                          <HelpCircle size={14} className="inline-block ml-1 mb-0.5 text-gray-400 cursor-help" />
+                          <button className="inline-flex items-center ml-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-opacity-50 rounded-full">
+                            <HelpCircle size={14} className="inline-block ml-1 mb-0.5 text-gray-400 cursor-help" />
+                          </button>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">{feature.tooltip}</p>
+                        <TooltipContent side="top" align="center" className="bg-gray-900 text-white dark:bg-gray-700 p-3 rounded-lg shadow-lg max-w-xs text-sm">
+                          <p>{feature.tooltip}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>

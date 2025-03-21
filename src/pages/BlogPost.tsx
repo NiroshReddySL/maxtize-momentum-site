@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Tag, Share2, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Tag, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import RelatedPosts from '@/components/blog/RelatedPosts';
@@ -10,6 +10,7 @@ import CommentSection from '@/components/blog/CommentSection';
 import NewsletterSignup from '@/components/blog/NewsletterSignup';
 import ScrollProgress from '@/components/blog/ScrollProgress';
 import TableOfContents from '@/components/blog/TableOfContents';
+import ShareArticle from '@/components/blog/ShareArticle';
 import SEO from '@/components/common/SEO';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import TextReveal from '@/components/animations/TextReveal';
@@ -81,6 +82,9 @@ const BlogPost = () => {
     { lang: 'de', href: `${window.location.origin}/de/blog/${post.slug}` },
     { lang: 'x-default', href: `${window.location.origin}/blog/${post.slug}` }
   ];
+
+  // Get the current URL for sharing
+  const currentUrl = `${window.location.origin}/blog/${post.slug}`;
 
   return (
     <div className="min-h-screen overflow-x-hidden">
@@ -187,17 +191,7 @@ const BlogPost = () => {
                 </ScrollReveal>
                 
                 <ScrollReveal>
-                  <div className="mt-12 p-6 border border-gray-200 dark:border-gray-800 rounded-xl flex justify-between items-center">
-                    <div>
-                      <h2 className="text-lg font-semibold mb-2">Share this article</h2>
-                      <p className="text-gray-500 dark:text-gray-400">Help spread the word!</p>
-                    </div>
-                    <div className="flex gap-4">
-                      <button className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-orange-100 dark:hover:bg-orange-900/30 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-                        <Share2 size={20} />
-                      </button>
-                    </div>
-                  </div>
+                  <ShareArticle title={post.title} url={currentUrl} />
                 </ScrollReveal>
                 
                 <ScrollReveal>

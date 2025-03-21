@@ -13,9 +13,10 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 interface ServiceLayoutProps {
   service: ServiceType;
   children?: ReactNode;
+  openContactForm: () => void;
 }
 
-const ServiceLayout = ({ service, children }: ServiceLayoutProps) => {
+const ServiceLayout = ({ service, children, openContactForm }: ServiceLayoutProps) => {
   const { currentLang } = useLanguage();
 
   // Get translated content based on current language
@@ -92,13 +93,13 @@ const ServiceLayout = ({ service, children }: ServiceLayoutProps) => {
                     {getTranslatedDescription()}
                   </p>
                   
-                  <Link 
-                    to="/contact" 
+                  <button 
+                    onClick={openContactForm} 
                     className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
                     {ctaText}
                     <ArrowRight size={16} className="ml-2" />
-                  </Link>
+                  </button>
                 </motion.div>
               </ScrollReveal>
 
