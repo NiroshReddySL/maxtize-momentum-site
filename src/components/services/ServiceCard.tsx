@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { ServiceType } from '@/types/service';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -14,6 +14,8 @@ interface ServiceCardProps {
 
 const ServiceCard = ({ service, openContactForm }: ServiceCardProps) => {
   const { currentLang } = useLanguage();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // Get translated content based on current language
   const getTranslatedTitle = () => {
@@ -55,29 +57,48 @@ const ServiceCard = ({ service, openContactForm }: ServiceCardProps) => {
   const imagePath = `/images/services/${service.id}-card.jpg`;
   const fallbackImage = `/images/services/placeholder-service.jpg`;
 
+  // Scroll card into view if it has the same ID as the URL hash
+  React.useEffect(() => {
+    const hash = window.location.hash.substring(1);
+    if (hash === service.id && cardRef.current) {
+      setTimeout(() => {
+        cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+    }
+  }, [service.id]);
+
   return (
     <motion.div 
       id={service.id} 
-      className="glass-card overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg transition-all duration-300"
+      ref={cardRef}
+      className="glass-card overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800 shadow-md hover:shadow-xl transition-all duration-300"
       whileHover={{ y: -5 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <div className="h-48 overflow-hidden">
+      <div className="relative h-52 overflow-hidden group">
         <LazyImage 
           src={imagePath} 
           alt={getTranslatedTitle()}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           placeholder={fallbackImage}
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-70"></div>
+        <div className="absolute bottom-4 left-6">
+          <h2 className="text-2xl font-bold text-white drop-shadow-md">{getTranslatedTitle()}</h2>
+        </div>
       </div>
       
       <div className="p-6">
-        <div className="w-16 h-16 flex items-center justify-center bg-orange-100 dark:bg-orange-900/30 text-orange-500 rounded-lg mb-6">
-          {service.icon}
+        <div className="flex items-center space-x-4 mb-4">
+          <div className="w-12 h-12 flex items-center justify-center bg-orange-100 dark:bg-orange-900/30 text-orange-500 rounded-lg">
+            {service.icon}
+          </div>
+          <div className="h-px flex-grow bg-gray-200 dark:bg-gray-700"></div>
         </div>
         
-        <h2 className="text-2xl font-bold mb-4">{getTranslatedTitle()}</h2>
-        <p className="text-gray-600 dark:text-gray-300 mb-6">
+        <p className="text-gray-600 dark:text-gray-300 mb-6 line-clamp-3">
           {getTranslatedDescription()}
         </p>
         
@@ -97,15 +118,15 @@ const ServiceCard = ({ service, openContactForm }: ServiceCardProps) => {
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <Link 
             to={`/services/${service.id}`}
-            className="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium transition-colors"
+            className="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium transition-colors group"
           >
             {learnMoreText}
-            <ArrowRight size={16} className="ml-2" />
+            <ArrowRight size={16} className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
           
           <button 
             onClick={openContactForm}
-            className="inline-flex items-center justify-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            className="inline-flex items-center justify-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow hover:shadow-lg"
           >
             {requestServiceText}
           </button>

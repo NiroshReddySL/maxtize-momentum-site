@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -20,7 +21,12 @@ const Index = () => {
   const { currentLang } = useLanguage();
   const { setTheme, theme, systemTheme } = useTheme();
   const { shouldAnimate } = useAnimation();
-  const { scrollYProgress } = useScroll();
+  
+  // Use optimized animation settings for better performance
+  const { scrollYProgress } = useScroll({
+    // More efficient scroll tracking with higher refresh rate
+    container: document.documentElement,
+  });
   
   const backgroundOpacity = useTransform(
     scrollYProgress,
@@ -62,6 +68,15 @@ const Index = () => {
     if (isLowEndDevice()) {
       document.body.classList.add('reduced-motion');
     }
+    
+    // Add will-change to optimize animation performance
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      mainElement.style.willChange = 'opacity';
+      return () => {
+        mainElement.style.willChange = 'auto';
+      };
+    }
   }, [lang, currentLang]);
 
   // Define hreflang links for international SEO
@@ -93,6 +108,7 @@ const Index = () => {
         initial={shouldAnimate ? { opacity: 0 } : false}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
+        className="relative z-10"
       >
         <div className="absolute inset-0 z-0 overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-br from-orange-200/30 to-pink-300/30 dark:from-orange-900/20 dark:to-pink-900/20 rounded-full filter blur-[100px] transform translate-x-1/4 -translate-y-1/4"></div>

@@ -8,14 +8,13 @@ import ServiceSection from '@/components/services/ServiceSection';
 import ServiceTestimonials from '@/components/services/ServiceTestimonials';
 import ServiceFAQ from '@/components/services/ServiceFAQ';
 import RelatedServices from '@/components/services/RelatedServices';
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import ContactForm from '@/components/contact/ContactForm';
-import { useToast } from '@/hooks/use-toast';
+import { X } from 'lucide-react';
 
 const ServiceDetail = () => {
   const { id, lang } = useParams<{ id: string; lang?: string }>();
   const [showContactForm, setShowContactForm] = useState(false);
-  const { toast } = useToast();
   
   // Find the requested service
   const service = services.find(s => s.id === id);
@@ -66,23 +65,22 @@ const ServiceDetail = () => {
 
       {/* Contact Form Dialog */}
       <Dialog open={showContactForm} onOpenChange={setShowContactForm}>
-        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden">
-          <DialogTitle className="p-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-            Request {service.title} Information
-          </DialogTitle>
-          <DialogDescription className="p-6 pt-2 pb-0 text-gray-700 dark:text-gray-300">
-            Fill out the form below and our team will get back to you shortly.
-          </DialogDescription>
-          <div className="p-6 pt-2">
+        <DialogContent className="max-w-md sm:max-w-[500px] p-0 overflow-hidden max-h-[90vh] sm:max-h-[auto] overflow-y-auto rounded-lg">
+          <div className="sticky top-0 z-10 bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white">
+            <h2 className="text-xl font-semibold mb-1">Request {service.title}</h2>
+            <p className="text-sm text-white/80">
+              Fill out the form below and our team will get back to you shortly.
+            </p>
+            <button 
+              onClick={() => setShowContactForm(false)} 
+              className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+              aria-label="Close dialog"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <div className="p-6">
             <ContactForm 
-              onSuccess={() => {
-                setShowContactForm(false);
-                toast({
-                  title: "Form submitted successfully",
-                  description: "We'll get back to you as soon as possible.",
-                  variant: "default",
-                });
-              }}
               purpose={service.title}
             />
           </div>

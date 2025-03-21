@@ -16,6 +16,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import NotFound from './pages/NotFound';
 import CookieConsent from './components/common/CookieConsent';
 import TermsOfUse from './pages/TermsOfUse';
+import ThankYou from './pages/ThankYou';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -46,6 +47,7 @@ function App() {
         <Route path="/faqs" element={<FAQs />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-use" element={<TermsOfUse />} />
+        <Route path="/thank-you" element={<ThankYou />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

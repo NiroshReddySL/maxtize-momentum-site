@@ -1,8 +1,16 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Send } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { submitToHubSpot } from '@/utils/hubspot';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 interface ContactFormProps {
   onSuccess?: () => void;
@@ -10,6 +18,7 @@ interface ContactFormProps {
 }
 
 const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -22,6 +31,10 @@ const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (value: string) => {
+    setFormData(prev => ({ ...prev, subject: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,6 +65,9 @@ const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
           message: ''
         });
         
+        // Navigate to thank you page
+        navigate('/thank-you', { state: { service: formData.subject } });
+        
         // Call onSuccess callback if provided
         if (onSuccess) {
           onSuccess();
@@ -74,6 +90,19 @@ const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
       setIsSubmitting(false);
     }
   };
+
+  // Service options
+  const serviceOptions = [
+    { value: 'Digital Marketing', label: 'Digital Marketing' },
+    { value: 'SEO', label: 'Search Engine Optimization (SEO)' },
+    { value: 'Web Development', label: 'Web Development' },
+    { value: 'App Development', label: 'App Development' },
+    { value: 'UI/UX Design', label: 'UI/UX Design' },
+    { value: 'Tech Consulting', label: 'Tech Consulting' },
+    { value: 'Maintenance', label: 'Maintenance & Support' },
+    { value: 'Training', label: 'Training & Workshops' },
+    { value: 'Other', label: 'Other Services' }
+  ];
 
   return (
     <div className="glass-card p-8 md:p-10 animate-slide-in">
@@ -112,17 +141,20 @@ const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
         
         <div>
           <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Subject
+            Service Interested In
           </label>
-          <input
-            type="text"
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white dark:bg-gray-800"
-          />
+          <Select value={formData.subject} onValueChange={handleSelectChange}>
+            <SelectTrigger id="subject" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white dark:bg-gray-800">
+              <SelectValue placeholder="Select a service" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[300px]">
+              {serviceOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         
         <div>
