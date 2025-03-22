@@ -10,7 +10,8 @@ import {
   Minimize2, 
   X,
   VolumeX,
-  Volume2
+  Volume2,
+  MoveUpRight
 } from 'lucide-react';
 
 const AccessibilityWidget = () => {
@@ -102,7 +103,7 @@ const AccessibilityWidget = () => {
     <>
       <button
         onClick={togglePanel}
-        className="fixed bottom-6 left-6 z-50 p-3 bg-orange-500 text-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
+        className="fixed bottom-6 left-6 z-50 p-3 bg-orange-500 text-white rounded-full shadow-lg hover:bg-orange-600 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-orange-300"
         aria-label="Accessibility options"
         aria-expanded={isOpen}
       >
@@ -115,7 +116,8 @@ const AccessibilityWidget = () => {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
-            className="fixed bottom-20 left-6 z-50 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 border border-gray-200 dark:border-gray-700"
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="fixed bottom-20 left-6 z-50 w-72 bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-5 border border-gray-200 dark:border-gray-700"
             role="dialog"
             aria-labelledby="accessibility-title"
           >
@@ -126,35 +128,35 @@ const AccessibilityWidget = () => {
               </h2>
               <button 
                 onClick={togglePanel}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 rounded-full p-1"
                 aria-label="Close accessibility panel"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="flex items-center text-sm font-medium">
-                    <Type size={18} className="mr-2" />
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center mb-1">
+                  <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <Type size={16} className="mr-2" />
                     Font Size
                   </label>
                   <div className="flex items-center">
                     <button
                       onClick={() => updateFontSize(false)}
-                      className="p-1 bg-gray-200 dark:bg-gray-700 rounded-l hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                      className="p-1 bg-gray-200 dark:bg-gray-700 rounded-l hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
                       aria-label="Decrease font size"
                       disabled={settings.fontSize <= 0.8}
                     >
                       <Minimize2 size={16} />
                     </button>
-                    <span className="px-2 bg-gray-100 dark:bg-gray-900 text-sm">
+                    <span className="px-2 bg-gray-100 dark:bg-gray-900 text-sm text-gray-800 dark:text-gray-200 min-w-[45px] text-center">
                       {Math.round(settings.fontSize * 100)}%
                     </span>
                     <button
                       onClick={() => updateFontSize(true)}
-                      className="p-1 bg-gray-200 dark:bg-gray-700 rounded-r hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                      className="p-1 bg-gray-200 dark:bg-gray-700 rounded-r hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
                       aria-label="Increase font size"
                       disabled={settings.fontSize >= 1.5}
                     >
@@ -162,77 +164,89 @@ const AccessibilityWidget = () => {
                     </button>
                   </div>
                 </div>
+                <div className="h-1 bg-gray-100 dark:bg-gray-700 rounded-full w-full">
+                  <div 
+                    className="h-1 bg-orange-500 rounded-full" 
+                    style={{ width: `${((settings.fontSize - 0.8) / 0.7) * 100}%` }}
+                  ></div>
+                </div>
               </div>
 
-              <div>
+              <div className="space-y-3">
                 <button
                   onClick={toggleContrast}
-                  className={`flex justify-between items-center w-full p-2 rounded ${
-                    settings.contrast ? 'bg-orange-100 dark:bg-orange-900/30' : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                  className={`flex justify-between items-center w-full p-3 rounded-lg transition-colors ${
+                    settings.contrast 
+                      ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-900 dark:text-orange-200' 
+                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
                   }`}
                   aria-pressed={settings.contrast}
                 >
                   <span className="flex items-center text-sm font-medium">
-                    <Contrast size={18} className="mr-2" />
+                    <Contrast size={16} className="mr-2" />
                     High Contrast
                   </span>
                   <span className={`w-10 h-5 relative rounded-full transition-colors duration-200 ease-in-out ${
                     settings.contrast ? 'bg-orange-500' : 'bg-gray-300 dark:bg-gray-600'
                   }`}>
-                    <span className={`absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${
+                    <span className={`absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ease-in-out ${
                       settings.contrast ? 'transform translate-x-5' : ''
                     }`} />
                   </span>
                 </button>
-              </div>
 
-              <div>
                 <button
                   onClick={toggleReduceMotion}
-                  className={`flex justify-between items-center w-full p-2 rounded ${
-                    settings.reduceMotion ? 'bg-orange-100 dark:bg-orange-900/30' : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                  className={`flex justify-between items-center w-full p-3 rounded-lg transition-colors ${
+                    settings.reduceMotion 
+                      ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-900 dark:text-orange-200' 
+                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
                   }`}
                   aria-pressed={settings.reduceMotion}
                 >
                   <span className="flex items-center text-sm font-medium">
-                    <Eye size={18} className="mr-2" />
+                    <MoveUpRight size={16} className="mr-2" />
                     Reduce Motion
                   </span>
                   <span className={`w-10 h-5 relative rounded-full transition-colors duration-200 ease-in-out ${
                     settings.reduceMotion ? 'bg-orange-500' : 'bg-gray-300 dark:bg-gray-600'
                   }`}>
-                    <span className={`absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${
+                    <span className={`absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ease-in-out ${
                       settings.reduceMotion ? 'transform translate-x-5' : ''
                     }`} />
                   </span>
                 </button>
-              </div>
 
-              <div>
                 <button
                   onClick={toggleSounds}
-                  className={`flex justify-between items-center w-full p-2 rounded ${
-                    settings.disableSounds ? 'bg-orange-100 dark:bg-orange-900/30' : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                  className={`flex justify-between items-center w-full p-3 rounded-lg transition-colors ${
+                    settings.disableSounds 
+                      ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-900 dark:text-orange-200' 
+                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
                   }`}
                   aria-pressed={settings.disableSounds}
                 >
                   <span className="flex items-center text-sm font-medium">
                     {settings.disableSounds ? (
-                      <VolumeX size={18} className="mr-2" />
+                      <VolumeX size={16} className="mr-2" />
                     ) : (
-                      <Volume2 size={18} className="mr-2" />
+                      <Volume2 size={16} className="mr-2" />
                     )}
                     Disable Sounds
                   </span>
                   <span className={`w-10 h-5 relative rounded-full transition-colors duration-200 ease-in-out ${
                     settings.disableSounds ? 'bg-orange-500' : 'bg-gray-300 dark:bg-gray-600'
                   }`}>
-                    <span className={`absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${
+                    <span className={`absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ease-in-out ${
                       settings.disableSounds ? 'transform translate-x-5' : ''
                     }`} />
                   </span>
                 </button>
               </div>
+              
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+                Your accessibility preferences are saved automatically between visits.
+              </p>
             </div>
           </motion.div>
         )}
