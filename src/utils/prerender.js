@@ -4,7 +4,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const { Renderer } = require('vue-server-renderer');
 
 // List of routes to prerender
 const routes = [
@@ -21,7 +20,7 @@ const routes = [
 // 3. Set up the build process to generate static HTML files
 
 /*
-Example implementation with react-snap would be:
+Implementation with react-snap would be:
 
 // In package.json scripts:
 // "postbuild": "react-snap"
@@ -35,7 +34,12 @@ if (rootElement.hasChildNodes()) {
   render(<App />, rootElement);
 }
 
-// Create react-snap configuration file
+// Create react-snap configuration file:
+// {
+//   "include": ["/", "/about", "/services", "/contact", "/blog"],
+//   "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
+//   "skipThirdPartyRequests": false
+// }
 */
 
 console.log('This is a placeholder for a proper prerendering implementation.');

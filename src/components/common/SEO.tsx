@@ -1,7 +1,6 @@
 
 import { useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Helmet } from 'react-helmet-async';
 
 interface HrefLangLink {
   lang: string;
@@ -38,75 +37,109 @@ const SEO = ({
   // Use currentLang from context if locale is not provided
   const actualLocale = locale || (currentLang === 'en-GB' ? 'en_GB' : currentLang === 'en' ? 'en_US' : currentLang);
   
-  // Create JSON-LD script
-  const generateJsonLd = () => {
-    if (!jsonLd) return null;
-    return {
-      __html: JSON.stringify(jsonLd)
+  useEffect(() => {
+    // Set document title
+    document.title = title;
+    
+    // Helper function to create and set meta tags
+    const setMetaTag = (name: string, content: string, property?: string) => {
+      let meta = document.querySelector(`meta[${property ? 'property' : 'name'}="${property || name}"]`);
+      if (!meta) {
+        meta = document.createElement('meta');
+        if (property) {
+          meta.setAttribute('property', property);
+        } else {
+          meta.setAttribute('name', name);
+        }
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
     };
-  };
-
-  // Additional structured data if provided
-  const generateStructuredData = () => {
-    if (!structuredData) return null;
-    return {
-      __html: structuredData
+    
+    // Helper function to create and set link tags
+    const setLinkTag = (rel: string, href: string, hrefLang?: string) => {
+      let selector = `link[rel="${rel}"]${hrefLang ? `[hreflang="${hrefLang}"]` : ''}`;
+      let link = document.querySelector(selector);
+      if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', rel);
+        if (hrefLang) {
+          link.setAttribute('hreflang', hrefLang);
+        }
+        document.head.appendChild(link);
+      }
+      link.setAttribute('href', href);
     };
-  };
-
-  return (
-    <Helmet>
-      {/* Basic metadata */}
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      {keywords && <meta name="keywords" content={keywords} />}
-      
-      {/* Open Graph tags */}
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:image" content={ogImage} />
-      <meta property="og:type" content={ogType} />
-      <meta property="og:locale" content={actualLocale} />
-      
-      {/* Twitter tags */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImage} />
-      
-      {/* Canonical link */}
-      {canonical && <link rel="canonical" href={canonical} />}
-      
-      {/* Hreflang links */}
-      {hrefLangs.map((link) => (
-        <link 
-          key={link.lang} 
-          rel="alternate" 
-          hrefLang={link.lang} 
-          href={link.href} 
-        />
-      ))}
-      
-      {/* If multiple languages but no x-default, add it */}
-      {hrefLangs.length > 0 && !hrefLangs.some(link => link.lang === 'x-default') && (
-        <link 
-          rel="alternate" 
-          hrefLang="x-default" 
-          href={canonical || window.location.href.split('?')[0]} 
-        />
-      )}
-      
-      {/* JSON-LD structured data */}
-      {jsonLd && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd()} />
-      )}
-      
-      {/* Additional structured data */}
-      {structuredData && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={generateStructuredData()} />
-      )}
-    </Helmet>
-  );
+    
+    // Set meta tags
+    setMetaTag('description', description);
+    if (keywords) setMetaTag('keywords', keywords);
+    
+    // Set Open Graph tags
+    setMetaTag('og:title', title, 'og:title');
+    setMetaTag('og:description', description, 'og:description');
+    setMetaTag('og:image', ogImage, 'og:image');
+    setMetaTag('og:type', ogType, 'og:type');
+    setMetaTag('og:locale', actualLocale, 'og:locale');
+    
+    // Set Twitter tags
+    setMetaTag('twitter:card', 'summary_large_image');
+    setMetaTag('twitter:title', title);
+    setMetaTag('twitter:description', description);
+    setMetaTag('twitter:image', ogImage);
+    
+    // Set canonical link if provided
+    if (canonical) {
+      setLinkTag('canonical', canonical);
+    }
+    
+    // Set hreflang links
+    hrefLangs.forEach(link => {
+      setLinkTag('alternate', link.href, link.lang);
+    });
+    
+    // Add x-default if multiple languages but no x-default
+    if (hrefLangs.length > 0 && !hrefLangs.some(link => link.lang === 'x-default')) {
+      setLinkTag('alternate', canonical || window.location.href.split('?')[0], 'x-default');
+    }
+    
+    // Handle JSON-LD structured data
+    let jsonLdScript = document.querySelector('script[type="application/ld+json"].jsonld-main');
+    if (jsonLd) {
+      if (!jsonLdScript) {
+        jsonLdScript = document.createElement('script');
+        jsonLdScript.setAttribute('type', 'application/ld+json');
+        jsonLdScript.classList.add('jsonld-main');
+        document.head.appendChild(jsonLdScript);
+      }
+      jsonLdScript.textContent = JSON.stringify(jsonLd);
+    } else if (jsonLdScript) {
+      jsonLdScript.remove();
+    }
+    
+    // Handle additional structured data
+    let structuredDataScript = document.querySelector('script[type="application/ld+json"].structured-data');
+    if (structuredData) {
+      if (!structuredDataScript) {
+        structuredDataScript = document.createElement('script');
+        structuredDataScript.setAttribute('type', 'application/ld+json');
+        structuredDataScript.classList.add('structured-data');
+        document.head.appendChild(structuredDataScript);
+      }
+      structuredDataScript.textContent = structuredData;
+    } else if (structuredDataScript) {
+      structuredDataScript.remove();
+    }
+    
+    // Cleanup function to remove tags when component unmounts
+    return () => {
+      // We don't remove meta tags here to prevent flickering
+      // They will be overwritten by the next SEO component
+    };
+  }, [title, description, keywords, ogImage, ogType, canonical, hrefLangs, actualLocale, jsonLd, structuredData]);
+  
+  // This component doesn't render anything visible
+  return null;
 };
 
 export default SEO;

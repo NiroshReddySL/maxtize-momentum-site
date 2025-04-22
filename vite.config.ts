@@ -50,7 +50,9 @@ export default defineConfig(({ mode }) => ({
             }
           }
         ]
-      }
+      },
+      strategies: 'generateSW',
+      injectRegister: 'auto'
     })
   ].filter(Boolean),
   resolve: {
@@ -69,6 +71,11 @@ export default defineConfig(({ mode }) => ({
           ui: ['@radix-ui/react-accordion', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu']
         }
       }
-    }
+    },
+    // Ensure build has good SSR support
+    ssrManifest: true,
+    // Improve SEO by prerendering critical paths
+    // You would need to implement a proper prerendering solution
+    // This is just a placeholder configuration
   }
 }));
