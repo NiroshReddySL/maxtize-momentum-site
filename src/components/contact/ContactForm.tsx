@@ -15,9 +15,10 @@ import {
 interface ContactFormProps {
   onSuccess?: () => void;
   purpose?: string;
+  selectedService?: string;
 }
 
-const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
+const ContactForm = ({ onSuccess, purpose = '', selectedService }: ContactFormProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,7 +49,8 @@ const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
         lastname: formData.name.split(' ').slice(1).join(' '),
         email: formData.email,
         subject: formData.subject,
-        message: formData.message
+        message: formData.message,
+        service: selectedService // Include the selected service if provided
       });
       
       if (success) {
