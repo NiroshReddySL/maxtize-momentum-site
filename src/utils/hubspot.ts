@@ -1,3 +1,4 @@
+
 // Add the service parameter to the interface and function
 interface HubSpotFormData {
   firstname: string;
@@ -6,6 +7,10 @@ interface HubSpotFormData {
   subject: string;
   message: string;
   service?: string; // Optional service parameter
+  company?: string; // Optional company parameter
+  phone?: string; // Optional phone parameter
+  project_name?: string; // Optional project name parameter
+  project_id?: string; // Optional project ID parameter
 }
 
 export const submitToHubSpot = async (data: HubSpotFormData): Promise<boolean> => {
