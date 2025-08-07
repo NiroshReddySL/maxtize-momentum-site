@@ -20,6 +20,7 @@ export interface ServiceContentSection {
 
 export interface ServiceContentType {
   id: string;
+  overview?: string;
   relatedServices: string[];
   sections: ServiceContentSection[];
   testimonials?: {

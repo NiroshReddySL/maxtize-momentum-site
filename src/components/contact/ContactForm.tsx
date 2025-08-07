@@ -15,6 +15,7 @@ import {
 interface ContactFormProps {
   onSuccess?: () => void;
   purpose?: string;
+  selectedService?: string;
 }
 
 const ContactForm = ({ onSuccess, purpose = '' }: ContactFormProps) => {
