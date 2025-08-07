@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -56,6 +55,7 @@ const Index = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     console.log("Index page mounted with language:", lang || currentLang);
+    document.title = "Maxtize - Digital Excellence for Growing Businesses";
     
     const isLowEndDevice = () => {
       return !window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
@@ -85,21 +85,6 @@ const Index = () => {
     { lang: 'x-default', href: `${window.location.origin}/` }
   ];
 
-  // Create JSON-LD structured data for homepage
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Maxtize",
-    "url": window.location.origin,
-    "logo": `${window.location.origin}/og-image.png`,
-    "description": "We're a young, dynamic team specializing in digital marketing, SEO, and full-stack development. No challenge is too complex for us.",
-    "sameAs": [
-      "https://twitter.com/maxtize",
-      "https://www.facebook.com/maxtize",
-      "https://www.linkedin.com/company/maxtize"
-    ]
-  };
-
   return (
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950" ref={scrollRef}>
       <SEO 
@@ -108,7 +93,6 @@ const Index = () => {
         keywords="digital agency, web development, SEO, digital marketing, app development"
         hrefLangs={hrefLangs}
         locale="en_US"
-        jsonLd={websiteJsonLd}
       />
       <Navbar />
       <Toaster position="top-right" />

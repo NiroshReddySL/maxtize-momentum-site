@@ -16,8 +16,6 @@ interface SEOProps {
   canonical?: string;
   hrefLangs?: HrefLangLink[];
   locale?: string;
-  jsonLd?: Record<string, any>;
-  structuredData?: string;
 }
 
 const SEO = ({ 
@@ -28,9 +26,7 @@ const SEO = ({
   ogType = 'website',
   canonical,
   hrefLangs = [],
-  locale,
-  jsonLd,
-  structuredData
+  locale
 }: SEOProps) => {
   const { currentLang } = useLanguage();
   
@@ -38,108 +34,92 @@ const SEO = ({
   const actualLocale = locale || (currentLang === 'en-GB' ? 'en_GB' : currentLang === 'en' ? 'en_US' : currentLang);
   
   useEffect(() => {
-    // Set document title
+    // Update document title
     document.title = title;
     
-    // Helper function to create and set meta tags
-    const setMetaTag = (name: string, content: string, property?: string) => {
-      let meta = document.querySelector(`meta[${property ? 'property' : 'name'}="${property || name}"]`);
-      if (!meta) {
-        meta = document.createElement('meta');
-        if (property) {
-          meta.setAttribute('property', property);
-        } else {
-          meta.setAttribute('name', name);
-        }
-        document.head.appendChild(meta);
+    // Update meta tags
+    updateMetaTag('description', description);
+    if (keywords) updateMetaTag('keywords', keywords);
+    
+    // Update Open Graph tags
+    updateMetaTag('og:title', title);
+    updateMetaTag('og:description', description);
+    updateMetaTag('og:image', ogImage);
+    updateMetaTag('og:type', ogType);
+    updateMetaTag('og:locale', actualLocale);
+    
+    // Update Twitter tags
+    updateMetaTag('twitter:card', 'summary_large_image');
+    updateMetaTag('twitter:title', title);
+    updateMetaTag('twitter:description', description);
+    updateMetaTag('twitter:image', ogImage);
+    
+    // Update canonical link
+    let canonicalUrl = canonical || window.location.href;
+    // Ensure canonical URL doesn't include query parameters
+    canonicalUrl = canonicalUrl.split('?')[0];
+    updateLinkTag('canonical', canonicalUrl);
+    
+    // Update hreflang links
+    updateHrefLangLinks(hrefLangs);
+    
+    // Add x-default hreflang if not present
+    const hasXDefault = hrefLangs.some(link => link.lang === 'x-default');
+    if (!hasXDefault && hrefLangs.length > 0) {
+      updateLinkTag('alternate', canonicalUrl, 'x-default');
+    }
+  }, [title, description, keywords, ogImage, ogType, canonical, hrefLangs, actualLocale, currentLang]);
+
+  const updateMetaTag = (name: string, content: string) => {
+    let meta = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
+    if (!meta) {
+      meta = document.createElement('meta');
+      const attr = name.startsWith('og:') || name.startsWith('twitter:') ? 'property' : 'name';
+      meta.setAttribute(attr, name);
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', content);
+  };
+  
+  const updateLinkTag = (rel: string, href?: string, hrefLang?: string) => {
+    if (!href) return;
+    
+    // For hreflang, we need to find by both rel and hreflang
+    const selector = hrefLang 
+      ? `link[rel="${rel}"][hreflang="${hrefLang}"]`
+      : `link[rel="${rel}"]`;
+      
+    let link = document.querySelector(selector);
+    
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', rel);
+      if (hrefLang) {
+        link.setAttribute('hreflang', hrefLang);
       }
-      meta.setAttribute('content', content);
-    };
-    
-    // Helper function to create and set link tags
-    const setLinkTag = (rel: string, href: string, hrefLang?: string) => {
-      let selector = `link[rel="${rel}"]${hrefLang ? `[hreflang="${hrefLang}"]` : ''}`;
-      let link = document.querySelector(selector);
-      if (!link) {
-        link = document.createElement('link');
-        link.setAttribute('rel', rel);
-        if (hrefLang) {
-          link.setAttribute('hreflang', hrefLang);
-        }
-        document.head.appendChild(link);
-      }
-      link.setAttribute('href', href);
-    };
-    
-    // Set meta tags
-    setMetaTag('description', description);
-    if (keywords) setMetaTag('keywords', keywords);
-    
-    // Set Open Graph tags
-    setMetaTag('og:title', title, 'og:title');
-    setMetaTag('og:description', description, 'og:description');
-    setMetaTag('og:image', ogImage, 'og:image');
-    setMetaTag('og:type', ogType, 'og:type');
-    setMetaTag('og:locale', actualLocale, 'og:locale');
-    
-    // Set Twitter tags
-    setMetaTag('twitter:card', 'summary_large_image');
-    setMetaTag('twitter:title', title);
-    setMetaTag('twitter:description', description);
-    setMetaTag('twitter:image', ogImage);
-    
-    // Set canonical link if provided
-    if (canonical) {
-      setLinkTag('canonical', canonical);
+      document.head.appendChild(link);
     }
     
-    // Set hreflang links
-    hrefLangs.forEach(link => {
-      setLinkTag('alternate', link.href, link.lang);
+    link.setAttribute('href', href);
+  };
+  
+  const updateHrefLangLinks = (links: HrefLangLink[]) => {
+    // Remove old hreflangs that are not in the new list
+    const oldHrefLangs = document.querySelectorAll('link[rel="alternate"][hreflang]');
+    oldHrefLangs.forEach(link => {
+      const lang = link.getAttribute('hreflang');
+      if (lang !== 'x-default' && !links.some(l => l.lang === lang)) {
+        document.head.removeChild(link);
+      }
     });
     
-    // Add x-default if multiple languages but no x-default
-    if (hrefLangs.length > 0 && !hrefLangs.some(link => link.lang === 'x-default')) {
-      setLinkTag('alternate', canonical || window.location.href.split('?')[0], 'x-default');
-    }
-    
-    // Handle JSON-LD structured data
-    let jsonLdScript = document.querySelector('script[type="application/ld+json"].jsonld-main');
-    if (jsonLd) {
-      if (!jsonLdScript) {
-        jsonLdScript = document.createElement('script');
-        jsonLdScript.setAttribute('type', 'application/ld+json');
-        jsonLdScript.classList.add('jsonld-main');
-        document.head.appendChild(jsonLdScript);
-      }
-      jsonLdScript.textContent = JSON.stringify(jsonLd);
-    } else if (jsonLdScript) {
-      jsonLdScript.remove();
-    }
-    
-    // Handle additional structured data
-    let structuredDataScript = document.querySelector('script[type="application/ld+json"].structured-data');
-    if (structuredData) {
-      if (!structuredDataScript) {
-        structuredDataScript = document.createElement('script');
-        structuredDataScript.setAttribute('type', 'application/ld+json');
-        structuredDataScript.classList.add('structured-data');
-        document.head.appendChild(structuredDataScript);
-      }
-      structuredDataScript.textContent = structuredData;
-    } else if (structuredDataScript) {
-      structuredDataScript.remove();
-    }
-    
-    // Cleanup function to remove tags when component unmounts
-    return () => {
-      // We don't remove meta tags here to prevent flickering
-      // They will be overwritten by the next SEO component
-    };
-  }, [title, description, keywords, ogImage, ogType, canonical, hrefLangs, actualLocale, jsonLd, structuredData]);
-  
-  // This component doesn't render anything visible
-  return null;
+    // Add/update hreflangs
+    links.forEach(link => {
+      updateLinkTag('alternate', link.href, link.lang);
+    });
+  };
+
+  return null; // This component doesn't render anything
 };
 
 export default SEO;

@@ -89,7 +89,7 @@ const ServiceDetail = () => {
                 </span>
               </h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
-                {service.description}
+                {serviceContent.overview || service.description}
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -198,6 +198,7 @@ const ServiceDetail = () => {
           <div className="p-6">
             <ContactForm 
               purpose={service.title}
+              selectedService={service.id}
               onSuccess={() => {
                 setShowContactForm(false);
                 window.location.href = `/thank-you?service=${encodeURIComponent(service.id)}`;

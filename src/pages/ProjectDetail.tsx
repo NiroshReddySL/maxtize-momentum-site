@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink, ChevronRight, Download } from 'lucide-react';
@@ -58,8 +59,6 @@ const ProjectDetail = () => {
         email: formData.email,
         company: formData.company,
         phone: formData.phone,
-        subject: 'Case Study Download',
-        message: `Requested case study: ${project?.title}`,
         project_name: project?.title || '',
         project_id: project?.id || ''
       });
